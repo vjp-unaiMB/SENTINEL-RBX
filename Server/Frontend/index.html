@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Unai">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+</head>
+<body>
+    <h1>Enviar mensaje a Roblox</h1>
+    
+    <form action="/back/mensaje" method="POST">
+        <input type="text" name="mensaje" placeholder="Escribe tu mensaje" required>
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        const eventSource = new EventSource('/back/stream');
+        
+        eventSource.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            alert("📩 Señal recibida:\n" + JSON.stringify(data, null, 2));
+        };
+    </script>
+</body>
+</html>
