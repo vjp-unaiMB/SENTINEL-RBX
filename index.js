@@ -37,17 +37,7 @@ app.use(express.static('Frontend'));
 
 
 
-//Lista de jugadores 
 
-app.post('/back/jugadores', express.json(), (req, res) => {
-    const lista = req.body.jugadores;
-
-    clients.forEach(client => {
-        client.write(`data: ${JSON.stringify({ jugadores: lista })}\n\n`);
-    });
-
-    res.send({ status: 'ok' });
-});
 
 
 
