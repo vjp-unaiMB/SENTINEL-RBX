@@ -2,18 +2,16 @@
 const eventoJugadores = new EventSource('/back/stream');
 
 eventoJugadores.onmessage = async (event) => {
-    const data = JSON.parse(event.data);
-    const jugadores = data.jugadores;
+    const dataParsed = JSON.parse(event.data);
+    const jugadores = dataParsed.jugadores;
 
     const contenedor = document.querySelector('.JugadoresLista');
-    contenedor.innerHTML = ''; // Limpiar lista antes de renderizar nueva
+    contenedor.innerHTML = ''; // Limpiar antes de renderizar
 
     for (const jugador of jugadores) {
-        const thumbnailURL = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${jugador.userId}&size=150x150&format=Png`;
-
         try {
-            const response = await fetch(thumbnailURL);
-            const json = await response.json();
+            const res = await fetch(`/proxy/avatar/${jugador.userId}`);
+            const json = await res.json();
             const imageUrl = json.data[0]?.imageUrl || '';
 
             contenedor.innerHTML += `
