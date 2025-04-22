@@ -15,35 +15,12 @@
         <button type="submit">Enviar</button>
     </form>
 
-
-    <div class="listaJugadores">
-        <h2>Lista de Jugadores</h2>
-        <ul id="jugadoresList">
-            <!-- Aquí se llenará la lista de jugadores -->
-        </ul>
+    <h2>Lista de Jugadores</h2>
+    <div class="Jugadores en línea" id="jugadores-en-linea">
+        
+        
     </div>
 
 
-    <script>
-        const eventSource = new EventSource('/back/stream');
-        
-        eventSource.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            alert("📩 Señal recibida:\n" + JSON.stringify(data, null, 2));
-        };
-    </script>
-
-<script>
-    const eventSource = new EventSource('/back/jugadores');
-    
-    eventSource.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        for (const jugador of data) {
-            const li = document.createElement('li');
-            li.textContent = jugador;
-            document.getElementById('jugadoresList').appendChild(li);
-        }
-    };
-</script>
 </body>
-</html>
+</html><script src="../cambiosDOM.js"></script>
