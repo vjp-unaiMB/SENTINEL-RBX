@@ -26,5 +26,5 @@ const eventoMensaje = new EventSource('/back/stream');
         
 eventoMensaje.onmessage = (event) => {
     const data = JSON.parse(event.data);
-    alert("📩 Señal recibida:\n" + JSON.stringify(data, null, 2));
+    
 };
