@@ -4,15 +4,25 @@
     <meta charset="UTF-8">
     <meta name="author" content="Unai">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="estilos.css" type="text/css">
     <title>Inicio</title>
 </head>
 <body>
     <h1>Enviar mensaje a Roblox</h1>
     
-    <form action="/back/mensaje" method="POST">
+    <form action="/back/guardarMensaje" method="POST">
         <input type="text" name="mensaje" placeholder="Escribe tu mensaje" required>
         <button type="submit">Enviar</button>
     </form>
+
+
+    <div class="listaJugadores">
+        <h2>Lista de Jugadores</h2>
+        <ul id="jugadoresList">
+            <!-- Aquí se llenará la lista de jugadores -->
+        </ul>
+    </div>
+
 
     <script>
         const eventSource = new EventSource('/back/stream');
@@ -22,5 +32,18 @@
             alert("📩 Señal recibida:\n" + JSON.stringify(data, null, 2));
         };
     </script>
+
+<script>
+    const eventSource = new EventSource('/back/jugadores');
+    
+    eventSource.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        for (const jugador of data) {
+            const li = document.createElement('li');
+            li.textContent = jugador;
+            document.getElementById('jugadoresList').appendChild(li);
+        }
+    };
+</script>
 </body>
 </html>

@@ -12,8 +12,74 @@ app.use(express.urlencoded({ extended: true })); // <-- Cambié aquí para proce
 // Ya no necesitamos express.json() porque no estamos enviando JSON desde el formulario
 // app.use(express.json());
 
-// Guardar mensaje de la web
-app.post('/back/mensaje', (req, res) => {
+// Código para reproducir un mensaje en terminal de inicio del servidor
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});
+
+// Cuando entramos al servidor mediante "/", nos redirige a la página principal indicando la carpeta donde se encuentra Index.html
+app.use(express.static('Frontend'));
+
+
+
+
+
+
+
+
+
+// RUTAS: ----------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+//Lista de jugadores 
+
+app.post('/back/jugadores', express.json(), (req, res) => {
+    const lista = req.body.jugadores;
+    console.log('📥 Lista recibida de Roblox:', lista);
+
+    // Emitir a la web si usas SSE
+    clients.forEach(client => {
+        client.write(`data: ${JSON.stringify({ jugadores: lista })}\n\n`);
+    });
+
+    res.send({ status: 'ok' });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Ruta de envio de mensaje del formulario al backend (Aquí gestionamos donde almacenarlo + reenviamos a la página principal)
+app.post('/back/guardarMensaje', (req, res) => {
     const mensaje = req.body.mensaje;  // Aquí obtenemos el dato del formulario
 
     if (!mensaje) {
@@ -30,7 +96,8 @@ app.post('/back/mensaje', (req, res) => {
     }
 });
 
-app.get('/back/mensaje', (req, res) => {
+// Ruta para pasarle la información a ROBLOX del formulario cuando este haga una petición ("Roblox hará una petición GET")
+app.get('/back/OfrecerMensaje', (req, res) => {
     const path = 'mensaje.txt';
   
     if (fs.existsSync(path)) {
@@ -66,6 +133,7 @@ app.get('/back/stream', (req, res) => {
     });
 });
 
+//Cuando se ejecuta un envío de señal en roblox, ROBLOX hace un post a /back/senal con el contenido json gestionado con express
 app.post('/back/senal', express.json(), (req, res) => {
     const contenido = req.body; // recibimos el JSON enviado por Roblox
 
@@ -79,12 +147,3 @@ app.post('/back/senal', express.json(), (req, res) => {
     res.send({ status: 'ok' });
 });
 
-
-
-
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
-
-// Cuando entramos al servidor mediante "/", nos redirige al formulario
-app.use(express.static('Frontend'));
