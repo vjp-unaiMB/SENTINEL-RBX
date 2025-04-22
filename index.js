@@ -37,7 +37,17 @@ app.use(express.static('Frontend'));
 
 
 
+//Lista de jugadores 
 
+app.post('/back/jugadores', express.json(), (req, res) => { //definimos una ruta post en nuestro server
+    const lista = req.body.jugadores; //extraemos el JSON
+
+    clients.forEach(client => { //al detectar un jugador nuevo la lista se actualiza
+        client.write(`data: ${JSON.stringify({ jugadores: lista })}\n\n`);
+    });
+
+    res.send({ status: 'Recibido con éxito' });//mandamos a roblox mensaje de todo recibido con éxito.
+});
 
 
 
