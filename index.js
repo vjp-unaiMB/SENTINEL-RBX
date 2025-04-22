@@ -41,9 +41,7 @@ app.use(express.static('Frontend'));
 
 app.post('/back/jugadores', express.json(), (req, res) => {
     const lista = req.body.jugadores;
-    console.log('📥 Lista recibida de Roblox:', lista);
 
-    // Emitir a la web si usas SSE
     clients.forEach(client => {
         client.write(`data: ${JSON.stringify({ jugadores: lista })}\n\n`);
     });
