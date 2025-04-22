@@ -5,7 +5,7 @@ eventSource.onmessage = (event) => {
     const data = JSON.parse(event.data);
     const jugadores = data.jugadores;
 
-    const contenedor = document.querySelector('.JugadoresEnLinea');
+    const contenedor = document.querySelector('.JugadoresLista');
     contenedor.innerHTML = ''; // Limpiar antes de añadir nuevos
 
     jugadores.forEach(jugador => {
