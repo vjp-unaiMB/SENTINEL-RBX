@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const cors = require('cors');
+const fetch = require('node-fetch');
 const TOKEN_CONEXION = "tOkEn/ComRbX";
 const app = express();
 const PORT = 3000;
@@ -32,6 +33,20 @@ app.use(express.static('Frontend'));
 
 
 
+// Proxy para imagen de avatar
+app.get('/proxy/avatar/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const url = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        res.json(data); // Reenviar la respuesta JSON al cliente
+    } catch (err) {
+        console.error('❌ Error al hacer fetch del avatar:', err);
+        res.status(500).json({ error: 'Error al obtener avatar' });
+    }
+});
 
 
 
