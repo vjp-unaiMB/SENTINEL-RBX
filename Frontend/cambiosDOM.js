@@ -13,7 +13,7 @@ eventoJugadores.onmessage = (event) => {
             <div class="jugador">
                 <p><strong>Nombre:</strong> ${jugador.name}</p>
                 <p><strong>ID:</strong> ${jugador.userId}</p>
-                <img src="https://www.roblox.com/headshot-thumbnail/image?userId=${jugador.userId}&width=150&height=150&format=png" alt="Avatar de ${jugador.name}">
+                <img src="https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${jugador.userId}&size=150x150&format=Png">
             </div>
         `;
     });
@@ -21,10 +21,4 @@ eventoJugadores.onmessage = (event) => {
 
 
 
-// Mensaje de señal recibida
-const eventoMensaje = new EventSource('/back/stream');
-        
-eventoMensaje.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    
-};
+
