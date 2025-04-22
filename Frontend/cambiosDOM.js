@@ -1,7 +1,7 @@
 // mensaje de llegada de jugadores 
-const eventSource = new EventSource('/back/stream');
+const eventoJugadores = new EventSource('/back/stream');
 
-eventSource.onmessage = (event) => {
+eventoJugadores.onmessage = (event) => {
     const data = JSON.parse(event.data);
     const jugadores = data.jugadores;
 
@@ -22,9 +22,9 @@ eventSource.onmessage = (event) => {
 
 
 // Mensaje de señal recibida
-const eventSource = new EventSource('/back/stream');
+const eventoMensaje = new EventSource('/back/stream');
         
-eventSource.onmessage = (event) => {
+eventoMensaje.onmessage = (event) => {
     const data = JSON.parse(event.data);
     alert("📩 Señal recibida:\n" + JSON.stringify(data, null, 2));
 };
