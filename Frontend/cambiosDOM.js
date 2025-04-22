@@ -13,7 +13,7 @@ eventoJugadores.onmessage = (event) => {
             <div class="jugador">
                 <p><strong>Nombre:</strong> ${jugador.name}</p>
                 <p><strong>ID:</strong> ${jugador.userId}</p>
-                <img src="https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${jugador.userId}&size=150x150&format=Png" alt="Avatar de ${jugador.name}">
+                <img src="https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${jugador.userId}&size=150x150&format=Png">
             </div>
         `;
     });
