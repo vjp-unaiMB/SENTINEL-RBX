@@ -94,7 +94,76 @@ app.get('/back/stream', (req, res) => {
 
 
 
-
+app.post('/back/enviar-senal', express.json(), async (req, res) => {
+    const { tipo, contenido } = req.body;
+    
+    if (!tipo || !contenido) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Faltan parámetros requeridos'
+      });
+    }
+    
+    try {
+      let robloxResponse;
+      let mensajeUsuario;
+      
+      // Determinar la acción a realizar en Roblox
+      switch(tipo) {
+        case 'mensaje-global':
+          robloxResponse = await enviarMensajeARoblox(contenido);
+          mensajeUsuario = 'Mensaje global enviado a Roblox';
+          break;
+          
+        case 'reiniciar-servidor':
+          robloxResponse = await reiniciarServidorRoblox();
+          mensajeUsuario = 'Solicitud de reinicio enviada a Roblox';
+          break;
+          
+        default:
+          return res.status(400).json({
+            success: false,
+            message: 'Tipo de acción no válido'
+          });
+      }
+      
+      // Verificar respuesta de Roblox
+      if (robloxResponse.success) {
+        res.json({
+          success: true,
+          message: mensajeUsuario,
+          robloxResponse: robloxResponse
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          message: 'Error al comunicarse con Roblox',
+          details: robloxResponse.error
+        });
+      }
+      
+    } catch (error) {
+      console.error('Error en /back/enviar-a-roblox:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Error interno del servidor'
+      });
+    }
+  });
+  
+  // Funciones auxiliares para interactuar con Roblox
+  async function enviarMensajeARoblox(mensaje) {
+    // Aquí implementarías la lógica para enviar el mensaje a Roblox
+    // Por ejemplo, usando HTTP requests a tu servidor de juego
+    
+    return { success: true, message: 'Mensaje procesado en Roblox' };
+  }
+  
+  async function reiniciarServidorRoblox() {
+    // Lógica para reiniciar el servidor en Roblox
+    
+    return { success: true, message: 'Reinicio iniciado' };
+  }
 
 
 

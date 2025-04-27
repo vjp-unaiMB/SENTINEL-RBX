@@ -47,3 +47,51 @@ window.onload = function() {
     cargarJugadores();
     conectarSSE();
 };
+
+
+//Desactivamos el reinicio de la página al enviar los formularios.
+document.getElementById('form').addEventListener('submit', function(e) {
+    e.preventDefault(); // Evita el comportamiento por defecto (recargar)
+});
+
+
+
+
+
+
+
+// CONTROL BOTONERA:
+
+document.querySelectorAll('.action-btn').forEach(btn => {
+    btn.addEventListener('click', async function() {
+      const action = this.dataset.action;
+      let endpoint, payload;
+      
+      // Configuración según el botón presionado
+      switch(action) {
+        case 'reiniciar-servidor':
+            if (!confirm('¿Está seguro de reiniciar el servidor?')) return;
+            
+            endpoint = '/back/enviar-senal';
+            payload = {
+                tipo: 'reiniciar-servidor',
+                contenido: 'Reiniciar'
+            };
+            break;
+          
+        case 'apagar-servidor':
+            if (!confirm('¿Está seguro de reiniciar el servidor?')) return;
+            
+            endpoint = '/back/enviar-senal';
+            payload = {
+                tipo: 'reiniciar-servidor',
+                contenido: 'Apagar'
+            };
+            break;
+    }
+      
+     
+    });
+});
+  
+  

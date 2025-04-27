@@ -5,22 +5,69 @@
     <meta name="author" content="Unai">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="estilos.css" type="text/css">
-    <title>Inicio</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="Recursos/Favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="Recursos/Favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="Recursos/Favicon/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+    <title>Monitorizar</title>
 </head>
 <body>
-    <h1>Enviar mensaje a Roblox</h1>
+
+    <header>
+        <div>
+            <img src="Recursos/Logo.png" alt=""> 
+
+
+            <p><span class="verde">CONEXIÓN:</span> Sentinel-RBX (Roblox)</p>
+            
+        </div>
+    </header>
+
+
+    <main>
+        <div class="gradiente"></div>
+        <div class="contenido">
+
+            <div class="contenido">
+                <div class="server-status">
+                    <h1>Estado del Servidor</h1>
+                    <div class="status" id="status"></div>
+
+                </div>
+
+                <div class="botonera">
+                    <button id="btnApagar" class="action-btn" data-action="apagar-servidor">
+                    </button>
+                    
+                    <button id="btnReiniciar" class="action-btn" data-action="reiniciar-servidor">
+                    </button>
     
-    <form action="/back/guardarMensaje" method="POST">
+                </div>
+
+
+        
+
+                <h2>Lista de Jugadores</h2>
+                <div class="JugadoresLista" id="JugadoresLista">
+                </div>
+        
+            </div> 
+
+        </div>
+    </main>
+        <!-- <form action="/back/guardarMensaje" id="form2" method="POST">
         <input type="text" name="mensaje" placeholder="Escribe tu mensaje" required>
         <button type="submit">Enviar</button>
-    </form>
+        </form> -->
 
-    <h2>Lista de Jugadores</h2>
-    <div class="JugadoresLista" id="JugadoresLista">
-        
-        
-    </div>
-
-
+    <footer>
+        <div class="gradiente"></div>
+        <div class="p-3  m-3 bg-gris-oscuro text-white text-start h-20 pt-6 text-xl">Footer</div>
+    </footer>
+   
 </body>
 </html><script src="cambiosDOM.js"></script>

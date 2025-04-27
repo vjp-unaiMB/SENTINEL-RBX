@@ -1,22 +1,101 @@
 body{
-    background-color: #202020;
+    background-color: #2A2B2E;
     color: white;
+    
 }
 
-button{
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
+.verde{
+    color: #007222;
 }
 
+.gradiente{
+    background: linear-gradient(0deg,rgba(33, 34, 37, 1) 0%, rgba(42, 43, 46, 1) 100%);
+    height: 4px;
+}
+
+main .gradiente{
+    transform: rotate(180deg);
+}
+
+header{
+    padding: 20px 0px;;
+    background-color: #212225; 
+    display: flex;
+    justify-content: center; 
+}
+
+header div{
+    width: 1400px;
+    display: flex;
+    align-items: center;    
+    justify-content: space-between;
+}
+
+main{
+    height: 80vh;
+}
+.contenido{
+    width: 1400px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+}
+footer{
+    background-color: #2A2B2E;;
+}
 img{
-    width: 100px;
+    width: 90px;
     height: 100px;
+}
+
+.botonera > *{
+    width: 200px;
+    height: 200px;
+    cursor: pointer;
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#btnReiniciar {
+    background-image: url(Recursos/B2.png);
+}
+#btnReiniciar:active {
+    background-image: url(Recursos/B2P.png);
+}
+
+#btnApagar{
+    background-image: url(Recursos/B1.png);
+}
+#btnApagar:active {
+    background-image: url(Recursos/B1P.png);
+  }
+
+/* Resolución de Escritorio*/
+@media (max-width: 1920px) {
+    
+}
+
+
+
+/* Resolución de Portatil*/
+@media (max-width: 1440px) { 
+    
+}
+
+/* Resolución de Tablet horizontal*/
+@media (max-width: 1200px) {
+    
+}
+
+/* Resolución de Tablet vertical*/
+@media (max-width: 767px) {
+    
+}
+
+/* Resolución de Móvil*/
+@media (max-width: 500px) {
+    
 }
