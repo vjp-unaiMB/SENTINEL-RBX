@@ -94,9 +94,10 @@ app.get('/back/stream', (req, res) => {
 
 
 
-
+// Enviar señales de botonera a roblox
 app.post('/back/enviar-senal', express.json(), async (req, res) => {
     const { tipo, contenido } = req.body;
+    console.log('Recibida señal:', { tipo, contenido }); // Debug
     
     if (!tipo || !contenido) {
         return res.status(400).json({ 
@@ -107,20 +108,22 @@ app.post('/back/enviar-senal', express.json(), async (req, res) => {
     
     try {
         let resultado;
+        const timestamp = new Date().toISOString();
         
-        // Determinar la acción a realizar en Roblox
         switch(tipo) {
             case 'mensaje-global':
-                // Implementa esta función según tus necesidades
-                resultado = await enviarMensajeARoblox(contenido);
+                fs.writeFileSync('mensaje.txt', contenido);
+                resultado = { status: 'Mensaje global guardado' };
                 break;
                 
             case 'reiniciar-servidor':
-                resultado = await reiniciarServidorRoblox();
+                fs.writeFileSync('comando.txt', 'reiniciar');
+                resultado = { status: 'Reinicio iniciado' };
                 break;
                 
-            case 'apagar-servidor':  // Nuevo caso para apagar
-                resultado = await apagarServidorRoblox();
+            case 'apagar-servidor':
+                fs.writeFileSync('comando.txt', 'apagar');
+                resultado = { status: 'Apagado iniciado' };
                 break;
                 
             default:
@@ -130,6 +133,7 @@ app.post('/back/enviar-senal', express.json(), async (req, res) => {
                 });
         }
         
+        console.log('Procesada señal:', resultado); // Debug
         res.json({
             success: true,
             message: `Acción "${tipo}" completada`,
@@ -137,7 +141,7 @@ app.post('/back/enviar-senal', express.json(), async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Error en /back/enviar-senal:', error);
+        console.error('Error:', error);
         res.status(500).json({
             success: false,
             message: 'Error interno del servidor',
@@ -145,22 +149,6 @@ app.post('/back/enviar-senal', express.json(), async (req, res) => {
         });
     }
 });
-
-// Funciones auxiliares (debes implementarlas)
-async function reiniciarServidorRoblox() {
-    // Tu lógica para reiniciar
-    return { status: 'Reinicio iniciado' };
-}
-
-async function apagarServidorRoblox() {
-    // Tu lógica para apagar
-    return { status: 'Apagado iniciado' };
-}
-
-async function enviarMensajeARoblox(mensaje) {
-    // Tu lógica para enviar mensajes
-    return { status: 'Mensaje enviado' };
-}
   
 
 

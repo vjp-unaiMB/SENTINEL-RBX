@@ -60,68 +60,115 @@ document.getElementById('form').addEventListener('submit', function(e) {
 
 
 
-// CONTROL BOTONERA:
-document.querySelectorAll('.action-btn').forEach(btn => {
-    btn.addEventListener('click', async function() {
-        const action = this.dataset.action;
-        let endpoint, payload, confirmMessage;
-        
-        // Configuración según el botón presionado
-        switch(action) {
-            case 'reiniciar-servidor':
-                confirmMessage = '¿Está seguro de reiniciar el servidor?';
-                endpoint = '/back/enviar-senal';
-                payload = {
-                    tipo: 'reiniciar-servidor',
-                    contenido: 'Reiniciar'
-                };
-                console.log('Se presionó Reiniciar servidor');
-                break;
-              
-            case 'apagar-servidor':
-                confirmMessage = '¿Está seguro de APAGAR el servidor?';
-                endpoint = '/back/enviar-senal';
-                payload = {
-                    tipo: 'apagar-servidor',  // Asegúrate que coincida con el back
-                    contenido: 'Apagar'
-                };
-                console.log('Se presionó Apagar servidor');
-                break;
+// CONTROL BOTONERA - Versión mejorada
+function setupButtonActions() {
+    const buttons = document.querySelectorAll('.action-btn');
+    
+    if (buttons.length === 0) {
+        console.error('No se encontraron botones con clase .action-btn');
+        return;
+    }
+
+    buttons.forEach(btn => {
+        const action = btn.dataset.action;
+        if (!action) {
+            console.warn('Botón sin data-action:', btn);
+            return;
         }
-        
-        if (!confirm(confirmMessage)) return;
-        
-        try {
-            // Mostrar estado de carga
-            this.disabled = true;
-            this.classList.add('loading');
+
+        btn.addEventListener('click', async function() {
+            console.log(`Botón ${action} clickeado`); // Debug
             
-            // Enviar la petición
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            });
+            let endpoint, payload, confirmMessage;
             
-            const result = await response.json();
-            
-            if (result.success) {
-                alert(result.message);
-            } else {
-                throw new Error(result.message || 'Error desconocido');
+            switch(action) {
+                case 'reiniciar-servidor':
+                    confirmMessage = '¿Está seguro de reiniciar el servidor?';
+                    endpoint = '/back/enviar-senal';
+                    payload = {
+                        tipo: 'reiniciar-servidor',
+                        contenido: 'Reiniciar'
+                    };
+                    break;
+                  
+                case 'apagar-servidor':
+                    confirmMessage = '¿Está seguro de APAGAR el servidor?';
+                    endpoint = '/back/enviar-senal';
+                    payload = {
+                        tipo: 'apagar-servidor',
+                        contenido: 'Apagar'
+                    };
+                    break;
+                    
+                case 'anunciar-servidor':
+                    confirmMessage = '¿Enviar anuncio a todos los jugadores?';
+                    endpoint = '/back/enviar-senal';
+                    payload = {
+                        tipo: 'mensaje-global',
+                        contenido: 'Anuncio importante del servidor'
+                    };
+                    break;
+                    
+                default:
+                    console.warn('Acción no reconocida:', action);
+                    return;
             }
             
-        } catch (error) {
-            console.error('Error:', error);
-            alert(`Error: ${error.message}`);
-        } finally {
-            // Restaurar botón
-            this.disabled = false;
-            this.classList.remove('loading');
-        }
+            if (!confirm(confirmMessage)) return;
+            
+            try {
+                console.log('Enviando:', payload); // Debug
+                this.disabled = true;
+                this.classList.add('loading');
+                
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('Respuesta del servidor:', result); // Debug
+                
+                alert(result.message || 'Acción completada');
+                
+            } catch (error) {
+                console.error('Error en la acción:', error);
+                alert(`Error: ${error.message}`);
+            } finally {
+                this.disabled = false;
+                this.classList.remove('loading');
+            }
+        });
     });
+}
+
+// Inicialización segura cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM completamente cargado - Inicializando...');
+    
+    // Configurar formulario si existe
+    const form = document.getElementById('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Formulario prevenido');
+        });
+    } else {
+        console.warn('Formulario no encontrado');
+    }
+    
+    // Configurar botones
+    setupButtonActions();
+    
+    // Iniciar otras funciones
+    cargarJugadores();
+    conectarSSE();
 });
-  
   
