@@ -4,6 +4,7 @@ const cors = require('cors');
 const TOKEN_CONEXION = "tOkEn/ComRbX";
 const app = express();
 const PORT = 3000;
+const path = require('path');
 
 app.use(cors());
 
@@ -40,7 +41,7 @@ app.use(express.static('Frontend'));
 //Lista de jugadores 
 
 //Ruta para recibir la lista de jugadores desde  el post de ROBLOX y guardar en JSON
-app.post('/back/jugadores', express.json(), (req, res) => {
+app.post('/back/jugadores', (req, res) => {
     const lista = req.body.jugadores;
 
     // Guardar en jugadores.json
