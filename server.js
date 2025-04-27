@@ -17,7 +17,7 @@ app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
 
-// Cuando entramos al servidor mediante "/", nos redirige a la página principal indicando la carpeta donde se encuentra Index.html
+// Cuando entramos al servidor mediante "/", nos redirige a la página principal indicando la carpeta donde se encuentra Server.html
 app.use(express.static('Frontend'));
 
 
