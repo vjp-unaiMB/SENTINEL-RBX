@@ -98,72 +98,69 @@ app.post('/back/enviar-senal', express.json(), async (req, res) => {
     const { tipo, contenido } = req.body;
     
     if (!tipo || !contenido) {
-      return res.status(400).json({ 
-        success: false,
-        message: 'Faltan parámetros requeridos'
-      });
+        return res.status(400).json({ 
+            success: false,
+            message: 'Faltan parámetros requeridos'
+        });
     }
     
     try {
-      let robloxResponse;
-      let mensajeUsuario;
-      
-      // Determinar la acción a realizar en Roblox
-      switch(tipo) {
-        case 'mensaje-global':
-          robloxResponse = await enviarMensajeARoblox(contenido);
-          mensajeUsuario = 'Mensaje global enviado a Roblox';
-          break;
-          
-        case 'reiniciar-servidor':
-          robloxResponse = await reiniciarServidorRoblox();
-          mensajeUsuario = 'Solicitud de reinicio enviada a Roblox';
-          break;
-          
-        default:
-          return res.status(400).json({
-            success: false,
-            message: 'Tipo de acción no válido'
-          });
-      }
-      
-      // Verificar respuesta de Roblox
-      if (robloxResponse.success) {
+        let resultado;
+        
+        // Determinar la acción a realizar en Roblox
+        switch(tipo) {
+            case 'mensaje-global':
+                // Implementa esta función según tus necesidades
+                resultado = await enviarMensajeARoblox(contenido);
+                break;
+                
+            case 'reiniciar-servidor':
+                resultado = await reiniciarServidorRoblox();
+                break;
+                
+            case 'apagar-servidor':  // Nuevo caso para apagar
+                resultado = await apagarServidorRoblox();
+                break;
+                
+            default:
+                return res.status(400).json({
+                    success: false,
+                    message: 'Tipo de acción no válido'
+                });
+        }
+        
         res.json({
-          success: true,
-          message: mensajeUsuario,
-          robloxResponse: robloxResponse
+            success: true,
+            message: `Acción "${tipo}" completada`,
+            resultado: resultado
         });
-      } else {
-        res.status(500).json({
-          success: false,
-          message: 'Error al comunicarse con Roblox',
-          details: robloxResponse.error
-        });
-      }
-      
+        
     } catch (error) {
-      console.error('Error en /back/enviar-a-roblox:', error);
-      res.status(500).json({
-        success: false,
-        message: 'Error interno del servidor'
-      });
+        console.error('Error en /back/enviar-senal:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error interno del servidor',
+            error: error.message
+        });
     }
-  });
+});
+
+// Funciones auxiliares (debes implementarlas)
+async function reiniciarServidorRoblox() {
+    // Tu lógica para reiniciar
+    return { status: 'Reinicio iniciado' };
+}
+
+async function apagarServidorRoblox() {
+    // Tu lógica para apagar
+    return { status: 'Apagado iniciado' };
+}
+
+async function enviarMensajeARoblox(mensaje) {
+    // Tu lógica para enviar mensajes
+    return { status: 'Mensaje enviado' };
+}
   
-  // Funciones auxiliares para interactuar con Roblox
-  async function enviarMensajeARoblox(mensaje) {
-    // Aquí implementarías la lógica para enviar el mensaje a Roblox
-    // Por ejemplo, usando HTTP requests a tu servidor de juego
-    
-    return { success: true, message: 'Mensaje procesado en Roblox' };
-  }
-  
-  async function reiniciarServidorRoblox() {
-    // Lógica para reiniciar el servidor en Roblox
-    
-    return { success: true, message: 'Reinicio iniciado' };
-  }
 
 
 

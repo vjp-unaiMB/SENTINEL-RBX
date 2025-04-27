@@ -71,7 +71,14 @@ img{
 }
 #btnApagar:active {
     background-image: url(Recursos/B1P.png);
-  }
+}
+
+#btnAnuncio{
+    background-image: url(Recursos/B3.png);
+}
+#btnAnuncio:active {
+    background-image: url(Recursos/B3P.png);
+}
 
 /* Resolución de Escritorio*/
 @media (max-width: 1920px) {

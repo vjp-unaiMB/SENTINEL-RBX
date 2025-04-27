@@ -61,36 +61,64 @@ document.getElementById('form').addEventListener('submit', function(e) {
 
 
 // CONTROL BOTONERA:
-
 document.querySelectorAll('.action-btn').forEach(btn => {
     btn.addEventListener('click', async function() {
-      const action = this.dataset.action;
-      let endpoint, payload;
-      
-      // Configuración según el botón presionado
-      switch(action) {
-        case 'reiniciar-servidor':
-            if (!confirm('¿Está seguro de reiniciar el servidor?')) return;
+        const action = this.dataset.action;
+        let endpoint, payload, confirmMessage;
+        
+        // Configuración según el botón presionado
+        switch(action) {
+            case 'reiniciar-servidor':
+                confirmMessage = '¿Está seguro de reiniciar el servidor?';
+                endpoint = '/back/enviar-senal';
+                payload = {
+                    tipo: 'reiniciar-servidor',
+                    contenido: 'Reiniciar'
+                };
+                break;
+              
+            case 'apagar-servidor':
+                confirmMessage = '¿Está seguro de APAGAR el servidor?';
+                endpoint = '/back/enviar-senal';
+                payload = {
+                    tipo: 'apagar-servidor',  // Asegúrate que coincida con el back
+                    contenido: 'Apagar'
+                };
+                break;
+        }
+        
+        if (!confirm(confirmMessage)) return;
+        
+        try {
+            // Mostrar estado de carga
+            this.disabled = true;
+            this.classList.add('loading');
             
-            endpoint = '/back/enviar-senal';
-            payload = {
-                tipo: 'reiniciar-servidor',
-                contenido: 'Reiniciar'
-            };
-            break;
-          
-        case 'apagar-servidor':
-            if (!confirm('¿Está seguro de reiniciar el servidor?')) return;
+            // Enviar la petición
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            });
             
-            endpoint = '/back/enviar-senal';
-            payload = {
-                tipo: 'reiniciar-servidor',
-                contenido: 'Apagar'
-            };
-            break;
-    }
-      
-     
+            const result = await response.json();
+            
+            if (result.success) {
+                alert(result.message);
+            } else {
+                throw new Error(result.message || 'Error desconocido');
+            }
+            
+        } catch (error) {
+            console.error('Error:', error);
+            alert(`Error: ${error.message}`);
+        } finally {
+            // Restaurar botón
+            this.disabled = false;
+            this.classList.remove('loading');
+        }
     });
 });
   
