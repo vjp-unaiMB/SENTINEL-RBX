@@ -10,8 +10,7 @@ app.use(cors());
 
 // Middleware para procesar datos de formularios (application/x-www-form-urlencoded)
 app.use(express.urlencoded({ extended: true })); // <-- Cambié aquí para procesar datos de formulario
-// Ya no necesitamos express.json() porque no estamos enviando JSON desde el formulario
-// app.use(express.json());
+app.use(express.json());
 
 // Código para reproducir un mensaje en terminal de inicio del servidor
 app.listen(PORT, () => {
@@ -42,18 +41,22 @@ app.use(express.static('Frontend'));
 
 //Ruta para recibir la lista de jugadores desde  el post de ROBLOX y guardar en JSON
 app.post('/back/jugadores', (req, res) => {
-    const lista = req.body.jugadores;
+    try {
+        console.log('Datos recibidos de Roblox:', req.body);
+        const lista = req.body.jugadores;
 
-    // Guardar en jugadores.json
-    const archivoJugadores = path.join(__dirname, 'jugadores.json');
-    fs.writeFileSync(archivoJugadores, JSON.stringify({ jugadores: lista }, null, 2));
+        const archivoJugadores = path.join(__dirname, 'jugadores.json');
+        fs.writeFileSync(archivoJugadores, JSON.stringify({ jugadores: lista }, null, 2));
 
-    // Mantener el sistema de stream si tienes SSE:
-    clients.forEach(client => {
-        client.write(`data: ${JSON.stringify({ jugadores: lista })}\n\n`);
-    });
+        clients.forEach(client => {
+            client.write(`data: ${JSON.stringify({ jugadores: lista })}\n\n`);
+        });
 
-    res.send({ status: 'Recibido' });
+        res.json({ status: 'Recibido' });
+    } catch (error) {
+        console.error('Error al procesar jugadores:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 });
 
 //Ruta para devolver los jugadores al cliente (Frontend)
