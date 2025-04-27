@@ -28,7 +28,7 @@ app.use(express.static('Frontend'));
 
 
 
-// RUTAS: ----------------------------------------------------------------------------------------------
+// [RUTAS/ Funciones de Servidor, controles de Get y Post] (Dividido en bloques)
 
 
 
@@ -37,7 +37,7 @@ app.use(express.static('Frontend'));
 
 
 
-//Lista de jugadores 
+//  BLOQUE DE LISTADO DE JUGADORES: ----------------------------------------------------------------------------------------------
 
 //Ruta para recibir la lista de jugadores desde  el post de ROBLOX y guardar en JSON
 app.post('/back/jugadores', (req, res) => {
@@ -45,10 +45,13 @@ app.post('/back/jugadores', (req, res) => {
         console.log('Datos recibidos de Roblox:', req.body);
         const lista = req.body.jugadores;
 
+        // Guardar en jugadores.json
         const archivoJugadores = path.join(__dirname, 'jugadores.json');
         fs.writeFileSync(archivoJugadores, JSON.stringify({ jugadores: lista }, null, 2));
 
+        // Notificar a todos los clientes conectados
         clients.forEach(client => {
+            client.write(`event: jugadores-update\n`);
             client.write(`data: ${JSON.stringify({ jugadores: lista })}\n\n`);
         });
 
@@ -67,7 +70,22 @@ app.get('/back/jugadores', (req, res) => {
 });
 
 
+// Este bloque de código es para gestionar la conexión entre el servidor y el cliente web mediante Server-Sent Events (SSE)
+// El cliente web se conecta a la ruta /back/stream y el servidor envía datos al frontend través de esta conexión
+let clients = [];
 
+app.get('/back/stream', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.flushHeaders();
+
+    clients.push(res);
+
+    req.on('close', () => {
+        clients = clients.filter(c => c !== res);
+    });
+});
 
 
 
@@ -131,21 +149,7 @@ app.get('/back/OfrecerMensaje', (req, res) => {
 
 
 
-// Recibir señal de roblox
-let clients = [];
 
-app.get('/back/stream', (req, res) => {
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders();
-
-    clients.push(res);
-
-    req.on('close', () => {
-        clients = clients.filter(c => c !== res);
-    });
-});
 
 //Cuando se ejecuta un envío de señal en roblox, ROBLOX hace un post a /back/senal con el contenido json gestionado con express
 app.post('/back/senal', express.json(), (req, res) => {
