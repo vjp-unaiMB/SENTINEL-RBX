@@ -75,6 +75,7 @@ document.querySelectorAll('.action-btn').forEach(btn => {
                     tipo: 'reiniciar-servidor',
                     contenido: 'Reiniciar'
                 };
+                console.log('Se presionó Reiniciar servidor');
                 break;
               
             case 'apagar-servidor':
@@ -84,6 +85,7 @@ document.querySelectorAll('.action-btn').forEach(btn => {
                     tipo: 'apagar-servidor',  // Asegúrate que coincida con el back
                     contenido: 'Apagar'
                 };
+                console.log('Se presionó Apagar servidor');
                 break;
         }
         

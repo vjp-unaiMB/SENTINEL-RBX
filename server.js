@@ -8,13 +8,14 @@ const path = require('path');
 
 app.use(cors());
 
-// Middleware para procesar datos de formularios (application/x-www-form-urlencoded)
+// Middleware para procesar datos de formularios 
 app.use(express.urlencoded({ extended: true })); // <-- Cambié aquí para procesar datos de formulario
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'frontend')));
 
 // Código para reproducir un mensaje en terminal de inicio del servidor
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`Servidor corriendo`);
 });
 
 // Cuando entramos al servidor mediante "/", nos redirige a la página principal indicando la carpeta donde se encuentra Server.html
