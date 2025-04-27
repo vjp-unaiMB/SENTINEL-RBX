@@ -30,9 +30,9 @@
 
     <main>
         <div class="gradiente"></div>
-        <div class="contenido">
 
-            <div class="contenido">
+        <div class="contenido">
+            <div class="fil fil1">
                 <div class="server-status">
                     <h1>Estado del Servidor</h1>
                     <div class="status" id="status"></div>
@@ -49,21 +49,23 @@
                     <button id="btnAnuncio" class="action-btn" data-action="anunciar-servidor">
                     </button>
                 </div>
-
-
-        
-
-                <h2>Lista de Jugadores</h2>
-                <div class="JugadoresLista" id="JugadoresLista">
+            </div>
+            <div class="fil fil2">
+                <div>
+                    <h2>Lista de Jugadores</h2>
+                    <div class="JugadoresLista" id="JugadoresLista">
+                    </div>
                 </div>
-                <form action="/back/guardarMensaje" id="form2" method="POST">
-                    <input type="text" name="mensaje" placeholder="Escribe tu mensaje" required>
-                    <button type="submit">Enviar</button>
-                </form>
-        
-            </div> 
 
-        </div>
+                <div>
+                    <form action="/back/guardarMensaje" id="form2" method="POST">
+                        <input type="text" name="mensaje" placeholder="Escribe tu mensaje" required>
+                        <button type="submit">Enviar</button>
+                    </form>
+                </div>
+            </div> 
+        </div> 
+
     </main>
         
 

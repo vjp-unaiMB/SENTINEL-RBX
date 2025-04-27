@@ -11,6 +11,7 @@ body{
 .gradiente{
     background: linear-gradient(0deg,rgba(33, 34, 37, 1) 0%, rgba(42, 43, 46, 1) 100%);
     height: 4px;
+    width: 100vw;
 }
 
 main .gradiente{
@@ -35,11 +36,26 @@ main{
     height: 80vh;
 }
 .contenido{
-    width: 1400px;
+    display: flex;
+    flex-direction: column;  
+ 
+    
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 0 auto;
+}
+.fil{
+    display: flex;
+    justify-content: space-around; 
+    width: 1400px;
+    padding: 50px 0px;
+}
+.botonera{
+    display:flex;
+}
+.botonera button{
+    margin-left: 20px;
 }
 footer{
     background-color: #2A2B2E;;
