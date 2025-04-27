@@ -1,25 +1,30 @@
-// mensaje de llegada de jugadores 
-const eventoJugadores = new EventSource('/back/stream');
+async function cargarJugadores() {
+    try {
+        const res = await fetch('/back/jugadores');
+        const data = await res.json();
+        const jugadores = data.jugadores;
 
-eventoJugadores.onmessage = (event) => {
-    const dataParsed = JSON.parse(event.data);
-    const jugadores = dataParsed.jugadores;
+        const contenedor = document.querySelector('.JugadoresLista');
+        contenedor.innerHTML = '';
 
-    const contenedor = document.querySelector('.JugadoresLista');
-    contenedor.innerHTML = ''; // Limpiar antes de renderizar
+        jugadores.forEach(jugador => {
+            contenedor.innerHTML += `
+                <div class="jugador">
+                    <p><strong>Nombre:</strong> ${jugador.name}</p>
+                    <p><strong>ID:</strong> ${jugador.userId}</p>
+                    <img src="https://www.roblox.com/headshot-thumbnail/image?userId=${jugador.userId}&width=150&height=150&format=png" alt="Avatar de ${jugador.name}">
+                </div>
+            `;
+        });
 
-    jugadores.forEach(jugador => {
-        const imageUrl = `https://www.roblox.com/headshot-thumbnail/image?userId=${jugador.userId}&width=150&height=150&format=png`;
+    } catch (error) {
+        console.error('Error cargando jugadores:', error);
+    }
+}
 
-        contenedor.innerHTML += `
-            <div class="jugador">
-                <p><strong>Nombre:</strong> ${jugador.name}</p>
-                <p><strong>ID:</strong> ${jugador.userId}</p>
-                <img src="${imageUrl}" alt="Avatar de ${jugador.name}">
-            </div>
-        `;
-    });
-};
+// Llamar a la función al cargar la página
+window.onload = cargarJugadores;
+
 
 
 

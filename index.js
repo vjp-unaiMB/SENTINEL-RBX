@@ -39,16 +39,28 @@ app.use(express.static('Frontend'));
 
 //Lista de jugadores 
 
-app.post('/back/jugadores', express.json(), (req, res) => { //definimos una ruta post en nuestro server
-    const lista = req.body.jugadores; //extraemos el JSON
+//Ruta para recibir la lista de jugadores desde  el post de ROBLOX y guardar en JSON
+app.post('/back/jugadores', express.json(), (req, res) => {
+    const lista = req.body.jugadores;
 
-    clients.forEach(client => { //al detectar un jugador nuevo la lista se actualiza
+    // Guardar en jugadores.json
+    const archivoJugadores = path.join(__dirname, 'jugadores.json');
+    fs.writeFileSync(archivoJugadores, JSON.stringify({ jugadores: lista }, null, 2));
+
+    // Mantener el sistema de stream si tienes SSE:
+    clients.forEach(client => {
         client.write(`data: ${JSON.stringify({ jugadores: lista })}\n\n`);
     });
 
-    res.send({ status: 'Recibido con éxito' });//mandamos a roblox mensaje de todo recibido con éxito.
+    res.send({ status: 'Recibido' });
 });
 
+//Ruta para devolver los jugadores al cliente (Frontend)
+app.get('/back/jugadores', (req, res) => {
+    const archivoJugadores = path.join(__dirname, 'jugadores.json');
+    const data = fs.readFileSync(archivoJugadores, 'utf-8');
+    res.json(JSON.parse(data));
+});
 
 
 
