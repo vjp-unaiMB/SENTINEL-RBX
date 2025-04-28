@@ -1,16 +1,48 @@
 // Función para actualizar la lista de jugadores en el DOM
 function actualizarListaJugadores(jugadores) {
     const contenedor = document.querySelector('.JugadoresLista');
+    if (!contenedor) {
+        console.error('Contenedor de jugadores no encontrado');
+        return;
+    }
+
     contenedor.innerHTML = '';
 
     jugadores.forEach(jugador => {
-        contenedor.innerHTML += `
-            <div class="jugador">
-                <p><strong>Nombre:</strong> ${jugador.name}</p>
-                <p><strong>ID:</strong> ${jugador.userId}</p>
-                <img src="https://www.roblox.com/headshot-thumbnail/image?userId=${jugador.userId}&width=150&height=150&format=png" alt="Avatar de ${jugador.name}">
-            </div>
+        // URL moderna para headshots
+        const avatarUrl = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${jugador.userId}&size=150x150&format=Png&isCircular=false`;
+        
+        // Crear elemento de imagen con manejo de errores
+        const img = document.createElement('img');
+        img.alt = `Avatar de ${jugador.name}`;
+        img.onerror = function() {
+            this.src = 'https://via.placeholder.com/150'; // Imagen de respaldo
+            this.style.opacity = '0.5';
+        };
+        
+        // Primero intentar con la API moderna
+        fetch(avatarUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data.data && data.data[0] && data.data[0].imageUrl) {
+                    img.src = data.data[0].imageUrl;
+                } else {
+                    throw new Error('No se pudo obtener la imagen');
+                }
+            })
+            .catch(() => {
+                // Fallback a la URL antigua si la API falla
+                img.src = `https://www.roblox.com/headshot-thumbnail/image?userId=${jugador.userId}&width=150&height=150&format=png`;
+            });
+
+        const jugadorElement = document.createElement('div');
+        jugadorElement.className = 'jugador';
+        jugadorElement.innerHTML = `
+            <p><strong>Nombre:</strong> ${jugador.name}</p>
+            <p><strong>ID:</strong> ${jugador.userId}</p>
         `;
+        jugadorElement.appendChild(img);
+        contenedor.appendChild(jugadorElement);
     });
 }
 
