@@ -32,7 +32,7 @@ function actualizarListaJugadores(jugadores) {
             })
             .catch(() => {
                 // Fallback a la URL antigua si la API falla
-                img.src = `https://www.roblox.com/headshot-thumbnail/image?userId=${jugador.userId}&width=150&height=150&format=png`;
+                img.src = `https://www.roblox.com/headshot-thumbnail/image?userId=${jugador.userId}&width=400&height=400&format=png`;
             });
 
         const jugadorElement = document.createElement('div');
