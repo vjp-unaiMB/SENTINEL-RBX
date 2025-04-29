@@ -2,29 +2,28 @@
 function actualizarListaJugadores(jugadores) {
     const contenedor = document.querySelector('.JugadoresLista');
     if (!contenedor) {
-        console.error('Contenedor de jugadores no encontrado');
-        return;
+      console.error('Contenedor de jugadores no encontrado');
+      return;
     }
-
+  
     contenedor.innerHTML = '';
-
+  
     jugadores.forEach(jugador => {
-        // Usar la URL proporcionada por Roblox (avatarUrl)
-        const avatarUrl = jugador.avatarUrl || `https://www.roblox.com/headshot-thumbnail/image?userId=${jugador.userId}&width=420&height=420&format=png`;
-        
-        const jugadorElement = document.createElement('div');
-        jugadorElement.className = 'jugador';
-        jugadorElement.innerHTML = `
-            <p><strong>Nombre:</strong> ${jugador.name}</p>
-            <p><strong>ID:</strong> ${jugador.userId}</p>
-            <img src="${avatarUrl}" 
-                 alt="Avatar de ${jugador.name}"
-                 onerror="this.src='https://via.placeholder.com/150'; this.style.opacity='0.5'">
-        `;
-        
-        contenedor.appendChild(jugadorElement);
+      const avatarUrl = `/proxy/avatar/${jugador.userId}`;
+  
+      const jugadorElement = document.createElement('div');
+      jugadorElement.className = 'jugador';
+      jugadorElement.innerHTML = `
+        <p><strong>Nombre:</strong> ${jugador.name}</p>
+        <p><strong>ID:</strong> ${jugador.userId}</p>
+        <img src="${avatarUrl}" 
+             alt="Avatar de ${jugador.name}"
+             onerror="this.src='https://via.placeholder.com/150'; this.style.opacity='0.5'">
+      `;
+  
+      contenedor.appendChild(jugadorElement);
     });
-}
+  }
 
 // Función para cargar jugadores (ahora reutiliza actualizarListaJugadores)
 async function cargarJugadores() {

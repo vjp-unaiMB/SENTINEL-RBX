@@ -1,22 +1,17 @@
 const express = require('express');
+const fetch = require('node-fetch');
 const fs = require('fs');
-const cors = require('cors');
 const TOKEN_CONEXION = "tOkEn/ComRbX";
 const app = express();
-const PORT = 3000;
 const path = require('path');
 
-app.use(cors());
 
 // Middleware para procesar datos de formularios 
 app.use(express.urlencoded({ extended: true })); // <-- Cambié aquí para procesar datos de formulario
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'frontend')));
 
-// Código para reproducir un mensaje en terminal de inicio del servidor
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo`);
-});
+
 
 // Cuando entramos al servidor mediante "/", nos redirige a la página principal indicando la carpeta donde se encuentra Server.html
 app.use(express.static('Frontend'));
@@ -153,9 +148,23 @@ app.post('/back/enviar-senal', express.json(), async (req, res) => {
 
 
 
+//proxy
 
-
-
+app.get('/proxy/avatar/:userId', async (req, res) => {
+    const userId = req.params.userId;
+    const robloxUrl = `https://www.roblox.com/headshot-thumbnail/image?userId=${userId}&width=420&height=420&format=png`;
+  
+    try {
+      const response = await fetch(robloxUrl);
+      const buffer = await response.buffer();
+  
+      res.set('Content-Type', 'image/png');
+      res.send(buffer);
+    } catch (error) {
+      console.error('Error en el proxy:', error);
+      res.status(500).send('Error al obtener avatar');
+    }
+  });
 
 
 
