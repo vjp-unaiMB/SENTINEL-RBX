@@ -1,80 +1,48 @@
 const express = require('express');
- const fetch = require('node-fetch');
- const fs = require('fs');
- const cors = require('cors');
- const TOKEN_CONEXION = "tOkEn/ComRbX";
- const app = express();
- const PORT = 3000;
- const path = require('path');
- 
- app.use(cors());
- 
- // Middleware para procesar datos de formularios 
- app.use(express.urlencoded({ extended: true })); // <-- Cambié aquí para procesar datos de formulario
- app.use(express.json());
- app.use(express.static(path.join(__dirname, 'frontend')));
- 
- // Código para reproducir un mensaje en terminal de inicio del servidor
- app.listen(PORT, () => {
-     console.log(`Servidor corriendo`);
- });
- 
- 
-// Cuando entramos al servidor mediante "/", nos redirige a la página principal indicando la carpeta donde se encuentra Server.html
-app.use(express.static('Frontend'));
+const fs = require('fs');
+const path = require('path');
+const axios = require('axios');
+const cors = require('cors');
+const app = express();
+const PORT = 3000;
+const TOKEN_CONEXION = "tOkEn/ComRbX";
+
+// Middleware general
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'Frontend')));
 
 
 
 
 
-
-
-
-
-// [RUTAS/ Funciones de Servidor, controles de Get y Post] (Dividido en bloques)
-
-
-
-
-
-
-
-
-//  BLOQUE DE LISTADO DE JUGADORES: ----------------------------------------------------------------------------------------------
-
-//Ruta para recibir la lista de jugadores desde  el post de ROBLOX y guardar en JSON
-app.post('/back/jugadores', (req, res) => {
-    try {
-        console.log('Datos recibidos de Roblox:', req.body);
-        const lista = req.body.jugadores;
-
-        // Guardar en jugadores.json
-        const archivoJugadores = path.join(__dirname, 'jugadores.json');
-        fs.writeFileSync(archivoJugadores, JSON.stringify({ jugadores: lista }, null, 2));
-
-        // Notificar a todos los clientes conectados
-        clients.forEach(client => {
-            client.write(`event: jugadores-update\n`);
-            client.write(`data: ${JSON.stringify({ jugadores: lista })}\n\n`);
-        });
-
-        res.json({ status: 'Recibido' });
-    } catch (error) {
-        console.error('Error al procesar jugadores:', error);
-        res.status(500).json({ error: 'Error interno del servidor' });
-    }
-});
-
-//Ruta para devolver los jugadores al cliente (Frontend)
-app.get('/back/jugadores', (req, res) => {
-    const archivoJugadores = path.join(__dirname, 'jugadores.json');
-    const data = fs.readFileSync(archivoJugadores, 'utf-8');
-    res.json(JSON.parse(data));
+// Iniciar servidor
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
 
 
-// Este bloque de código es para gestionar la conexión entre el servidor y el cliente web mediante Server-Sent Events (SSE)
-// El cliente web se conecta a la ruta /back/stream y el servidor envía datos al frontend través de esta conexión
+
+
+
+
+
+// Rutas legales
+app.get('/privacy', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Frontend', 'Legal', 'privacy.html'));
+});
+
+app.get('/terms', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Frontend', 'Legal', 'terms.html'));
+});
+
+
+
+
+
+
+// SSE (Server-Sent Events)
 let clients = [];
 
 app.get('/back/stream', (req, res) => {
@@ -95,124 +63,138 @@ app.get('/back/stream', (req, res) => {
 
 
 
+// Ruta para guardar lista de jugadores enviada por Roblox
+app.post('/back/jugadores', (req, res) => {
+    try {
+        const lista = req.body.jugadores;
+        const archivoJugadores = path.join(__dirname, 'jugadores.json');
 
-// Enviar señales de botonera a roblox
-app.post('/back/enviar-senal', express.json(), async (req, res) => {
-    const { tipo, contenido } = req.body;
-    console.log('Recibida señal:', { tipo, contenido }); // Debug
-    
-    if (!tipo || !contenido) {
-        return res.status(400).json({ 
-            success: false,
-            message: 'Faltan parámetros requeridos'
+        fs.writeFileSync(archivoJugadores, JSON.stringify({ jugadores: lista }, null, 2));
+
+        clients.forEach(client => {
+            client.write(`event: jugadores-update\n`);
+            client.write(`data: ${JSON.stringify({ jugadores: lista })}\n\n`);
         });
+
+        res.json({ status: 'Recibido' });
+    } catch (error) {
+        console.error('Error al procesar jugadores:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
-    
+});
+
+
+
+
+
+
+// Ruta para devolver los jugadores
+app.get('/back/jugadores', (req, res) => {
+    const archivoJugadores = path.join(__dirname, 'jugadores.json');
+    const data = fs.readFileSync(archivoJugadores, 'utf-8');
+    res.json(JSON.parse(data));
+});
+
+
+
+
+
+
+// Ruta para enviar señales a Roblox
+app.post('/back/enviar-senal', (req, res) => {
+    const { tipo, contenido } = req.body;
+    if (!tipo || !contenido) return res.status(400).json({ success: false, message: 'Faltan parámetros requeridos' });
+
     try {
         let resultado;
-        const timestamp = new Date().toISOString();
-        
         switch(tipo) {
             case 'mensaje-global':
                 fs.writeFileSync('mensaje.txt', contenido);
                 resultado = { status: 'Mensaje global guardado' };
                 break;
-                
             case 'reiniciar-servidor':
                 fs.writeFileSync('comando.txt', 'reiniciar');
                 resultado = { status: 'Reinicio iniciado' };
                 break;
-                
             case 'apagar-servidor':
                 fs.writeFileSync('comando.txt', 'apagar');
                 resultado = { status: 'Apagado iniciado' };
                 break;
-                
             default:
-                return res.status(400).json({
-                    success: false,
-                    message: 'Tipo de acción no válido'
-                });
+                return res.status(400).json({ success: false, message: 'Tipo de acción no válido' });
         }
-        
-        console.log('Procesada señal:', resultado); // Debug
-        res.json({
-            success: true,
-            message: `Acción "${tipo}" completada`,
-            resultado: resultado
-        });
-        
+        res.json({ success: true, message: `Acción "${tipo}" completada`, resultado });
     } catch (error) {
         console.error('Error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error interno del servidor',
-            error: error.message
-        });
+        res.status(500).json({ success: false, message: 'Error interno del servidor', error: error.message });
     }
 });
-  
 
 
 
-//proxy
 
-app.get('/proxy/avatar/:userId', async (req, res) => {
-    const userId = req.params.userId;
-    const robloxUrl = `https://www.roblox.com/headshot-thumbnail/image?userId=${userId}&width=420&height=420&format=png`;
-  
+
+
+// Ruta de autenticación OAuth de Roblox
+app.get('/oauth/callback', async (req, res) => {
+    const authCode = req.query.code;
+    if (!authCode) return res.status(400).send("No se proporcionó ningún código");
+
     try {
-      const response = await fetch(robloxUrl);
-      const buffer = await response.buffer();
-  
-      res.set('Content-Type', 'image/png');
-      res.send(buffer);
+        const response = await axios.post('https://apis.roblox.com/oauth/v1/token', {
+            client_id: '1962754022683329903',
+            client_secret: 'RBX-dvNueLPYVUCCIV91-BuzzdFZUsMHforaSBT-Md8TthAbbE48mcne1b7VgevroJUu',
+            grant_type: 'authorization_code',
+            code: authCode,
+            redirect_uri: 'https://sentinel-rbx.onrender.com/oauth/callback'
+        }, {
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const accessToken = response.data.access_token;
+        console.log("Token recibido:", accessToken);
+
+        return res.redirect('/');
     } catch (error) {
-      console.error('Error en el proxy:', error);
-      res.status(500).send('Error al obtener avatar');
+        console.error("Error al intercambiar el código por el token:", error?.response?.data || error);
+        return res.status(500).send("Error en el proceso de autenticación");
     }
-  });
+});
 
 
 
 
 
 
-
-
-
-// Ruta de envio de mensaje del formulario al backend (Aquí gestionamos donde almacenarlo + reenviamos a la página principal)
+// Guardar mensaje desde formulario web
 app.post('/back/guardarMensaje', (req, res) => {
-    const mensaje = req.body.mensaje;  // Aquí obtenemos el dato del formulario
+    const mensaje = req.body.mensaje;
+    if (!mensaje) return res.status(400).send('No se recibió mensaje.');
 
-    if (!mensaje) {
-        return res.status(400).send('No se recibió mensaje.');
-    }
-
-    // Si el mensaje es válido, puedes proceder con la lógica de escritura en archivo
     try {
-        fs.writeFileSync('mensaje.txt', mensaje);  // Escribe el mensaje en un archivo
-        res.redirect('/'); // volvemos a inicio
+        fs.writeFileSync('mensaje.txt', mensaje);
+        res.redirect('/');
     } catch (err) {
         console.error('Error escribiendo el archivo:', err);
-        res.status(500).send('Hubo un error al procesar el mensaje.');
+        res.status(500).send('Error al procesar el mensaje.');
     }
 });
 
-// Ruta para pasarle la información a ROBLOX del formulario cuando este haga una petición ("Roblox hará una petición GET")
+
+
+
+
+
+// Ofrecer mensaje a Roblox (lectura por GET)
 app.get('/back/OfrecerMensaje', (req, res) => {
-    const path = 'mensaje.txt';
-  
-    if (fs.existsSync(path)) {
-      const mensaje = fs.readFileSync(path, 'utf8');
-  
-      // Responder al cliente
-      res.send(mensaje);
-  
-      // Inmediatamente después de enviar, reseteamos el archivo
-      fs.writeFileSync(path, 'NUL_Instruccion');
+    const mensajePath = 'mensaje.txt';
+
+    if (fs.existsSync(mensajePath)) {
+        const mensaje = fs.readFileSync(mensajePath, 'utf8');
+        res.send(mensaje);
+        fs.writeFileSync(mensajePath, 'NUL_Instruccion');
     } else {
-      res.send('NUL_Instruccion');  // Por si el archivo no existe
+        res.send('NUL_Instruccion');
     }
 });
 
@@ -221,18 +203,11 @@ app.get('/back/OfrecerMensaje', (req, res) => {
 
 
 
-
-//Cuando se ejecuta un envío de señal en roblox, ROBLOX hace un post a /back/senal con el contenido json gestionado con express
+// Recibir señal directa desde Roblox y reenviarla por SSE
 app.post('/back/senal', express.json(), (req, res) => {
-    const contenido = req.body; // recibimos el JSON enviado por Roblox
-
-    console.log('📨 Señal recibida con contenido:', contenido);
-
-    // Lo mandamos como string al cliente web
+    const contenido = req.body;
     clients.forEach(client => {
         client.write(`data: ${JSON.stringify(contenido)}\n\n`);
     });
-
     res.send({ status: 'ok' });
 });
-
