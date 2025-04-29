@@ -100,8 +100,10 @@ app.get('/back/jugadores', (req, res) => {
 
 
 
-// Ruta para enviar señales a Roblox
-// Ruta para enviar señales a Roblox
+// Rutas para recibir la info del DOM y enviar señales a Roblox
+let ultimaSenal = null;
+
+// Ruta POST para establecer una señal (botonera)
 app.post('/back/enviar-senal', (req, res) => {
     const { tipo, contenido } = req.body;
 
@@ -109,33 +111,37 @@ app.post('/back/enviar-senal', (req, res) => {
         return res.status(400).json({ success: false, message: 'Faltan parámetros requeridos' });
     }
 
-    let resultado = null;
+    // Guardamos la última señal recibida
+    ultimaSenal = {
+        tipo,
+        contenido
+    };
 
-    try {
-        switch (tipo) {
-            case 'mensaje-global':
-                fs.writeFileSync('mensaje.txt', contenido);
-                resultado = { status: 'Mensaje global guardado', mensaje: contenido };
-                break;
-            case 'reiniciar-servidor':
-                fs.writeFileSync('comando.txt', 'reiniciar');
-                resultado = { status: 'Reinicio iniciado' };
-                break;
-            case 'apagar-servidor':
-                fs.writeFileSync('comando.txt', 'apagar');
-                resultado = { status: 'Apagado iniciado' };
-                break;
-            default:
-                return res.status(400).json({ success: false, message: 'Tipo de acción no válido' });
-        }
-        
-        res.json({ success: true, message: `Acción "${tipo}" completada`, resultado });
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ success: false, message: 'Error interno del servidor', error: error.message });
-    }
+    res.json({ success: true, message: `Acción "${tipo}" guardada`, resultado: ultimaSenal });
 });
 
+// Nueva ruta GET para que Roblox lea la última señal
+app.get('/back/enviar-senal', (req, res) => {
+    if (!ultimaSenal) {
+        return res.json({ resultado: { status: "Ninguna señal disponible" } });
+    }
+
+    // Devolvemos la señal y la borramos después (opcional, si solo se consume una vez)
+    const respuesta = { ...ultimaSenal };
+    ultimaSenal = null;
+
+    res.json({ resultado: { status: mapearTipo(respuesta.tipo), mensaje: respuesta.contenido } });
+});
+
+// Función para mapear tipo a texto descriptivo
+function mapearTipo(tipo) {
+    switch (tipo) {
+        case 'mensaje-global': return 'Mensaje global guardado';
+        case 'reiniciar-servidor': return 'Reinicio iniciado';
+        case 'apagar-servidor': return 'Apagado iniciado';
+        default: return 'Tipo desconocido';
+    }
+}
 
 
 
