@@ -101,16 +101,21 @@ app.get('/back/jugadores', (req, res) => {
 
 
 // Ruta para enviar señales a Roblox
+// Ruta para enviar señales a Roblox
 app.post('/back/enviar-senal', (req, res) => {
     const { tipo, contenido } = req.body;
-    if (!tipo || !contenido) return res.status(400).json({ success: false, message: 'Faltan parámetros requeridos' });
+
+    if (!tipo || !contenido) {
+        return res.status(400).json({ success: false, message: 'Faltan parámetros requeridos' });
+    }
+
+    let resultado = null;
 
     try {
-        let resultado;
-        switch(tipo) {
+        switch (tipo) {
             case 'mensaje-global':
                 fs.writeFileSync('mensaje.txt', contenido);
-                resultado = { status: 'Mensaje global guardado' };
+                resultado = { status: 'Mensaje global guardado', mensaje: contenido };
                 break;
             case 'reiniciar-servidor':
                 fs.writeFileSync('comando.txt', 'reiniciar');
@@ -123,6 +128,7 @@ app.post('/back/enviar-senal', (req, res) => {
             default:
                 return res.status(400).json({ success: false, message: 'Tipo de acción no válido' });
         }
+        
         res.json({ success: true, message: `Acción "${tipo}" completada`, resultado });
     } catch (error) {
         console.error('Error:', error);

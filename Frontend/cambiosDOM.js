@@ -16,7 +16,7 @@ function actualizarListaJugadores(jugadores) {
         jugadorElement.innerHTML = `
             <p><strong>Nombre:</strong> ${jugador.name}</p>
             <p><strong>ID:</strong> ${jugador.userId}</p>
-            <img src="https://apis.roblox.com/cloud/v2/users/${jugador.userId}:generateThumbnail" 
+            <img src="https://apis.roblox.com/avatars/v1/users/${jugador.userId}/thumbnail" 
                  alt="Avatar de ${jugador.name}"
                  onerror="this.src='https://placehold.co/150x150?text=Sin+Avatar'; this.style.opacity='0.5'">
         `;
@@ -71,7 +71,7 @@ document.getElementById('form').addEventListener('submit', function(e) {
 
 
 
-// CONTROL BOTONERA - Versión mejorada
+// CONTROL BOTONERA 
 function setupButtonActions() {
     const buttons = document.querySelectorAll('.action-btn');
     
@@ -159,6 +159,11 @@ function setupButtonActions() {
         });
     });
 }
+
+
+
+
+
 
 // Inicialización segura cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
