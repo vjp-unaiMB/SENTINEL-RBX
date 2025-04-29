@@ -1,11 +1,13 @@
-body{
-    background-color: #2A2B2E;
-    color: white;
-    
-}
 
+
+.gris{
+    background-color: #212225;
+}
+.grisClaro{
+    background-color: #2A2B2E;
+}
 .verde{
-    color: #007222;
+    color: #0fb641;
 }
 
 .gradiente{
@@ -14,58 +16,18 @@ body{
     width: 100vw;
 }
 
-main .gradiente{
-    transform: rotate(180deg);
+.gradiente2{
+    background: linear-gradient(180deg,rgba(33, 34, 37, 1) 0%, rgba(42, 43, 46, 1) 100%);
+    height: 4px;
+    width: 100vw;
 }
 
-header{
-    padding: 20px 0px;;
-    background-color: #212225; 
-    display: flex;
-    justify-content: center; 
-}
-
-header div{
-    width: 1400px;
-    display: flex;
-    align-items: center;    
-    justify-content: space-between;
-}
-
-main{
-    height: 80vh;
-}
-.contenido{
-    display: flex;
-    flex-direction: column;  
- 
-    
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;
-}
-.fil{
-    display: flex;
-    justify-content: space-around; 
-    width: 1400px;
-    padding: 50px 0px;
-}
-.botonera{
-    display:flex;
-}
-.botonera button{
-    margin-left: 20px;
-}
-footer{
-    background-color: #2A2B2E;;
-}
 img{
     width: 90px;
     height: 100px;
 }
 
-.botonera > *{
+.botonera > button{
     width: 200px;
     height: 200px;
     cursor: pointer;
@@ -73,6 +35,7 @@ img{
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    margin-left: 20px;
 }
 
 #btnReiniciar {
@@ -94,31 +57,4 @@ img{
 }
 #btnAnuncio:active {
     background-image: url(Recursos/B3P.png);
-}
-
-/* Resolución de Escritorio*/
-@media (max-width: 1920px) {
-    
-}
-
-
-
-/* Resolución de Portatil*/
-@media (max-width: 1440px) { 
-    
-}
-
-/* Resolución de Tablet horizontal*/
-@media (max-width: 1200px) {
-    
-}
-
-/* Resolución de Tablet vertical*/
-@media (max-width: 767px) {
-    
-}
-
-/* Resolución de Móvil*/
-@media (max-width: 500px) {
-    
 }

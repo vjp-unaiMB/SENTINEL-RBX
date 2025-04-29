@@ -11,25 +11,20 @@
     <link rel="icon" type="image/png" sizes="16x16" href="Recursos/Favicon/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
 
-    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 
     <title>Monitorizar</title>
 </head>
-<body>
+<body class="gris">
 
-    <header>
-        <div>
-            <img src="Recursos/Logo.png" alt=""> 
-
-
-            <p><span class="verde">CONEXIÓN:</span> Sentinel-RBX (Roblox)</p>
-            
-        </div>
+    <header class="container gris d-flex flex-row justify-content-between w-80 text-white">
+        <img src="Recursos/Logo.png" alt=""> 
+        <p class="color-white"><span class="verde">CONEXIÓN:</span> Sentinel-RBX (Roblox)</p>
     </header>
 
 
-    <main>
-        <div class="gradiente"></div>
+    <main class="container-fluid text-white grisClaro">
+        <div class="gradiente2"></div>
 
         <div class="contenido">
             <div class="fil fil1">
@@ -40,13 +35,13 @@
                 </div>
 
                 <div class="botonera">
-                    <button id="btnApagar" class="action-btn" data-action="apagar-servidor">
+                    <button id="btnApagar" class="action-btn bg-danger" data-action="apagar-servidor">
                     </button>
                     
-                    <button id="btnReiniciar" class="action-btn" data-action="reiniciar-servidor">
+                    <button id="btnReiniciar" class="action-btn bg-warning" data-action="reiniciar-servidor">
                     </button>
                 
-                    <button id="btnAnuncio" class="action-btn" data-action="anunciar-servidor">   
+                    <button id="btnAnuncio" class="action-btn bg-primary" data-action="anunciar-servidor">   
                     </button>
                 </div>
             </div>
@@ -71,7 +66,7 @@
     </main>
         
 
-    <footer>
+    <footer class="container text-white">
         <div class="gradiente"></div>
         <div class="p-3  m-3 bg-gris-oscuro text-white text-start h-20 pt-6 text-xl">Footer</div>
     </footer>
