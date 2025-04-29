@@ -16,7 +16,7 @@ function actualizarListaJugadores(jugadores) {
         jugadorElement.innerHTML = `
             <p><strong>Nombre:</strong> ${jugador.name}</p>
             <p><strong>ID:</strong> ${jugador.userId}</p>
-            <img src="${avatarUrl}" 
+            <img src="https://apis.roblox.com/cloud/v2/users/${jugador.userId}:generateThumbnail" 
                  alt="Avatar de ${jugador.name}"
                  onerror="this.src='https://placehold.co/150x150?text=Sin+Avatar'; this.style.opacity='0.5'">
         `;
