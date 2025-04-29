@@ -2,30 +2,30 @@
 function actualizarListaJugadores(jugadores) {
     const contenedor = document.querySelector('.JugadoresLista');
     if (!contenedor) {
-      console.error('Contenedor de jugadores no encontrado');
-      return;
+        console.error('Contenedor de jugadores no encontrado');
+        return;
     }
-  
-    contenedor.innerHTML = '';
-  
-    jugadores.forEach(jugador => {
-      const avatarUrl = `/proxy/avatar/${jugador.userId}`;
-  
-      const jugadorElement = document.createElement('div');
-      jugadorElement.className = 'jugador';
-      jugadorElement.innerHTML = `
-        <p><strong>Nombre:</strong> ${jugador.name}</p>
-        <p><strong>ID:</strong> ${jugador.userId}</p>
-        <img src="${avatarUrl}" 
-             alt="Avatar de ${jugador.name}"
-             onerror="this.src='https://via.placeholder.com/150'; this.style.opacity='0.5'">
-      `;
-  
-      contenedor.appendChild(jugadorElement);
-    });
-  }
 
-// Función para cargar jugadores (ahora reutiliza actualizarListaJugadores)
+    contenedor.innerHTML = '';
+
+    jugadores.forEach(jugador => {
+        const avatarUrl = jugador.avatarData || `https://placehold.co/150x150?text=Sin+Avatar`;
+
+        const jugadorElement = document.createElement('div');
+        jugadorElement.className = 'jugador';
+        jugadorElement.innerHTML = `
+            <p><strong>Nombre:</strong> ${jugador.name}</p>
+            <p><strong>ID:</strong> ${jugador.userId}</p>
+            <img src="${avatarUrl}" 
+                 alt="Avatar de ${jugador.name}"
+                 onerror="this.src='https://placehold.co/150x150?text=Sin+Avatar'; this.style.opacity='0.5'">
+        `;
+
+        contenedor.appendChild(jugadorElement);
+    });
+}
+
+// Función para cargar jugadores (reutiliza actualizarListaJugadores)
 async function cargarJugadores() {
     try {
         const res = await fetch('/back/jugadores');
@@ -48,16 +48,16 @@ function conectarSSE() {
 
     eventSource.onerror = (error) => {
         console.error('Error en la conexión SSE:', error);
-        // Reconectar después de 5 segundos
-        setTimeout(conectarSSE, 5000);
+        setTimeout(conectarSSE, 5000); // Reintento
     };
 }
 
-// Inicialización cuando se carga la página
-window.onload = function() {
+// Inicialización al cargar la página
+window.onload = function () {
     cargarJugadores();
     conectarSSE();
 };
+
 
 
 //Desactivamos el reinicio de la página al enviar los formularios.
