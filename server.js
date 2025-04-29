@@ -1,18 +1,25 @@
 const express = require('express');
-const fetch = require('node-fetch');
-const fs = require('fs');
-const TOKEN_CONEXION = "tOkEn/ComRbX";
-const app = express();
-const path = require('path');
-
-
-// Middleware para procesar datos de formularios 
-app.use(express.urlencoded({ extended: true })); // <-- Cambié aquí para procesar datos de formulario
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'frontend')));
-
-
-
+ const fetch = require('node-fetch');
+ const fs = require('fs');
+ const cors = require('cors');
+ const TOKEN_CONEXION = "tOkEn/ComRbX";
+ const app = express();
+ const PORT = 3000;
+ const path = require('path');
+ 
+ app.use(cors());
+ 
+ // Middleware para procesar datos de formularios 
+ app.use(express.urlencoded({ extended: true })); // <-- Cambié aquí para procesar datos de formulario
+ app.use(express.json());
+ app.use(express.static(path.join(__dirname, 'frontend')));
+ 
+ // Código para reproducir un mensaje en terminal de inicio del servidor
+ app.listen(PORT, () => {
+     console.log(`Servidor corriendo`);
+ });
+ 
+ 
 // Cuando entramos al servidor mediante "/", nos redirige a la página principal indicando la carpeta donde se encuentra Server.html
 app.use(express.static('Frontend'));
 
