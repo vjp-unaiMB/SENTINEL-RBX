@@ -70,15 +70,62 @@ document.getElementById('form').addEventListener('submit', function(e) {
 
 
 
-
-// CONTROL BOTONERA 
+// Control Botonera
 function setupButtonActions() {
     const buttons = document.querySelectorAll('.action-btn');
-    
+
     if (buttons.length === 0) {
         console.error('No se encontraron botones con clase .action-btn');
         return;
     }
+
+    const modal = document.getElementById('formularioEmergente');
+    const cerrarModal = document.getElementById('cerrarFormulario');
+    const confirmarAnuncio = document.getElementById('enviarMensaje');
+    const inputAnuncio = document.getElementById('mensajeGlobal');
+    let botonActual = null;
+
+    cerrarModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+        inputAnuncio.value = '';
+    });
+
+    confirmarAnuncio.addEventListener('click', async () => {
+        const mensaje = inputAnuncio.value.trim();
+        if (!mensaje) {
+            alert('Por favor, escribe un mensaje.');
+            return;
+        }
+
+        const payload = {
+            tipo: 'mensaje-global',
+            contenido: mensaje
+        };
+
+        try {
+            botonActual.disabled = true;
+            botonActual.classList.add('loading');
+
+            const response = await fetch('/back/enviar-senal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) throw new Error(`Error ${response.status}`);
+            const result = await response.json();
+
+            alert(result.message || 'Mensaje enviado');
+        } catch (error) {
+            console.error(error);
+            alert('Error al enviar el mensaje');
+        } finally {
+            botonActual.disabled = false;
+            botonActual.classList.remove('loading');
+            modal.style.display = 'none';
+            inputAnuncio.value = '';
+        }
+    });
 
     buttons.forEach(btn => {
         const action = btn.dataset.action;
@@ -87,51 +134,46 @@ function setupButtonActions() {
             return;
         }
 
-        btn.addEventListener('click', async function() {
-            console.log(`Botón ${action} clickeado`); // Debug
-            
+        btn.addEventListener('click', async function () {
+            console.log(`Botón ${action} clickeado`);
+
             let endpoint, payload, confirmMessage;
-            
+
             switch(action) {
                 case 'reiniciar-servidor':
-                    confirmMessage = '¿Está seguro de reiniciar el servidor?';
+                    confirmMessage = '¿Está seguro de reiniciar el servidor? <br> ¡Esto desconectará a todos los jugadores!';
                     endpoint = '/back/enviar-senal';
                     payload = {
                         tipo: 'reiniciar-servidor',
                         contenido: 'Reiniciar'
                     };
                     break;
-                  
+
                 case 'apagar-servidor':
-                    confirmMessage = '¿Está seguro de APAGAR el servidor?';
+                    confirmMessage = '¿Está seguro de APAGAR el servidor? <br> ¡Esto desconectará a todos los jugadores!';
                     endpoint = '/back/enviar-senal';
                     payload = {
                         tipo: 'apagar-servidor',
                         contenido: 'Apagar'
                     };
                     break;
-                    
+
                 case 'anunciar-servidor':
-                    confirmMessage = '¿Enviar anuncio a todos los jugadores?';
-                    endpoint = '/back/enviar-senal';
-                    payload = {
-                        tipo: 'mensaje-global',
-                        contenido: 'Anuncio importante del servidor'
-                    };
-                    break;
-                    
+                    modal.style.display = 'block';
+                    botonActual = this;
+                    return;
+
                 default:
                     console.warn('Acción no reconocida:', action);
                     return;
             }
-            
+
             if (!confirm(confirmMessage)) return;
-            
+
             try {
-                console.log('Enviando:', payload); // Debug
                 this.disabled = true;
                 this.classList.add('loading');
-                
+
                 const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: {
@@ -139,16 +181,14 @@ function setupButtonActions() {
                     },
                     body: JSON.stringify(payload)
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const result = await response.json();
-                console.log('Respuesta del servidor:', result); // Debug
-                
                 alert(result.message || 'Acción completada');
-                
+
             } catch (error) {
                 console.error('Error en la acción:', error);
                 alert(`Error: ${error.message}`);
@@ -159,6 +199,8 @@ function setupButtonActions() {
         });
     });
 }
+
+
 
 
 
