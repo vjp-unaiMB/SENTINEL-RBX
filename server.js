@@ -133,18 +133,15 @@ app.get('/back/enviar-senal', (req, res) => {
     res.json({ resultado: { status: mapearTipo(respuesta.tipo), mensaje: respuesta.contenido } });
 });
 
-// Función para mapear tipo a texto descriptivo
+// Función para mapear tipo a texto descriptivo (Es lo que le permitirá a las condicionales de roblox comparar el tipo de señal)
 function mapearTipo(tipo) {
     switch (tipo) {
-        case 'mensaje-global': return 'Mensaje global guardado';
-        case 'reiniciar-servidor': return 'Reinicio iniciado';
-        case 'apagar-servidor': return 'Apagado iniciado';
+        case 'mensaje-global': return 'MensajeGlobal';
+        case 'reiniciar-servidor': return 'ReinicioIniciado';
+        case 'apagar-servidor': return 'ApagadoIniciado';
         default: return 'Tipo desconocido';
     }
 }
-
-
-
 
 
 // Ruta de autenticación OAuth de Roblox
