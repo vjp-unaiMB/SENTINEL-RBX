@@ -18,19 +18,31 @@
 <body class="gris">
 
     <header class="container gris d-flex flex-row justify-content-between w-80 text-white">
-        <img src="Recursos/Logo.png" alt=""> 
+        <a href="/" class="logo"><img src="Recursos/Logo.png" alt=""></a>
         <p class="color-white"><span class="verde">CONEXIÓN:</span> Sentinel-RBX (Roblox)</p>
     </header>
 
 
     <main class="container-fluid text-white grisClaro">
-        <div class="gradiente2"></div>
 
         <div class="contenido">
             <div class="fil fil1">
+
+                <!-- Estadísticas generales -->
                 <div class="server-status">
                     <h1>Estado del Servidor</h1>
-                    <div class="status" id="status"></div>
+                    <div class="status display flex flex-row-reverse" id="status">
+                        <div class="estado">
+                            <span class="actividad">Activo</span>
+                            <img src="Recursos/Led apagado.png" alt="">
+                        </div>
+                        <div class="jugadores">
+                            <span>Jugadores: </span>
+                        </div>
+                        <div class="tiempo"> 
+                            <span>Tiempo: </span>
+                        </div>
+                    </div>
 
                 </div>
 

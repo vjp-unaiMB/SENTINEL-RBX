@@ -3,11 +3,27 @@
 .gris{
     background-color: #212225;
 }
+
+.logo:hover img{
+    transform: scale(1.2) rotate(180deg);
+    transition: all 0.4s ease-in-out;
+
+}
+.logo:hover {
+    background-color: #39cb2913;
+    border-radius: 2px;
+    transition: all 0.4s ease-in-out;
+}
+.logo:not(:hover) img{
+    transform: scale(1) rotate(0deg);
+    transition: all 0.3s ease-in-out;
+}
+
 .grisClaro{
     background-color: #2A2B2E;
 }
 .verde{
-    color: #0fb641;
+    color: #007222;
 }
 
 .gradiente{
@@ -23,13 +39,14 @@
 }
 
 img{
-    width: 90px;
-    height: 100px;
+    width: 75px;
+    height: 80px;
+    padding: 10px;
 }
 
 .botonera > button{
-    width: 200px;
-    height: 200px;
+    min-width: 100px;
+    min-height: 100px;
     cursor: pointer;
     border-radius: 10px;
     background-size: cover;
