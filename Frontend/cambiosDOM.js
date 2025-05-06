@@ -1,5 +1,5 @@
 //Variables globales
-const cronometro = false;
+let cronometro = false;
 
 
 
@@ -9,7 +9,7 @@ function actualizarListaJugadores(jugadores) {
     const contadorJugadores = document.querySelector('.jugadores');
     const actividadServer = document.querySelector('.estado');
 
-    const jugadoresAux = 0;
+    let jugadoresAux = 0;
     if (!contenedor) {
         console.error('Contenedor de jugadores no encontrado');
         return;
@@ -36,15 +36,15 @@ function actualizarListaJugadores(jugadores) {
     });
     switch (jugadoresAux) {
         case 1:
-            contadorJugadores.innerHTML = `<span style="color=red"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
+            contadorJugadores.innerHTML = `<span style="color: red"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
         break;
 
         case 2:
-            contadorJugadores.innerHTML = `<span style="color=orange"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
+            contadorJugadores.innerHTML = `<span style="color: orange"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
         break;
     
         default:
-            contadorJugadores.innerHTML = `<span style="color=green"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
+            contadorJugadores.innerHTML = `<span style="color: green"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
         break;
     }
     if(jugadoresAux == 0){
