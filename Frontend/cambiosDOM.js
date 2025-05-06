@@ -1,7 +1,5 @@
-//Variables globales
+// Variables globales
 let cronometro = false;
-
-
 
 // Función para actualizar la lista de jugadores en el DOM
 function actualizarListaJugadores(jugadores) {
@@ -15,56 +13,43 @@ function actualizarListaJugadores(jugadores) {
         return;
     }
 
-    contenedor.innerHTML = ``;
-    contadorJugadores.innerHTML = ``;
-    actividadServer.innerHTML = ``;
+    contenedor.innerHTML = '';
+    contadorJugadores.innerHTML = '';
+    actividadServer.innerHTML = '';
 
     jugadores.forEach(jugador => {
-
         const jugadorElement = document.createElement('div');
         jugadorElement.className = 'jugador';
         jugadorElement.innerHTML = `
             <p><strong>Nombre:</strong> ${jugador.name}</p>
             <p><strong>ID:</strong> ${jugador.userId}</p>
-            <img src="https://apis.roblox.com/avatars/v1/users/${jugador.userId}/thumbnail" 
+            <img src="https://thumbnails.roblox.com/v1/users/avatar?userIds=${jugador.userId}&size=150x150&format=Png&isCircular=false" 
                 alt="Avatar de ${jugador.name}"
                 onerror="this.src='https://placehold.co/150x150?text=Sin+Avatar'; this.style.opacity='0.5'">
         `;
 
         contenedor.appendChild(jugadorElement);
-        jugadoresAux ++;
-        console.log( "jugadores" + jugadoresAux);
+        jugadoresAux++;
+        console.log("Jugador #" + jugadoresAux, jugador);
     });
-    
-    if(jugadoresAux == 0){
-        actividadServer.innerHTML = `<span class="actividad text-danger">Inactivo </span><img src="Recursos/Led apagado.png" alt=""></img>`;
-    }else{
-        actividadServer.innerHTML = `<span class="actividad text-success">Activo </span><img src="Recursos/Led encendido.png" alt=""></img>`;  
-        
-        switch (jugadoresAux) {
-        case 1:
-            contadorJugadores.innerHTML = `<span style="color: red"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
-        break;
 
-        case 2:
-            contadorJugadores.innerHTML = `<span style="color: orange"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
-        break;
-    
-        default:
-            contadorJugadores.innerHTML = `<span style="color: green"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
-        break;
-        }
+    if (jugadoresAux === 0) {
+        actividadServer.innerHTML = `<span class="actividad text-danger">Inactivo </span><img src="Recursos/Led apagado.png" alt="">`;
+    } else {
+        actividadServer.innerHTML = `<span class="actividad text-success">Activo </span><img src="Recursos/Led encendido.png" alt="">`;
+
+        let color = jugadoresAux === 1 ? 'red' : jugadoresAux === 2 ? 'orange' : 'green';
+        contadorJugadores.innerHTML = `<span style="color: ${color}"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
         cronometro = true;
     }
-
-    
 }
 
-// Función para cargar jugadores (reutiliza actualizarListaJugadores)
+// Cargar jugadores desde el servidor
 async function cargarJugadores() {
     try {
         const res = await fetch('/jugadores');
         const data = await res.json();
+        console.log("Jugadores recibidos:", data);
         actualizarListaJugadores(data.jugadores);
     } catch (error) {
         console.error('Error cargando jugadores:', error);
@@ -87,29 +72,11 @@ function conectarSSE() {
     };
 }
 
-// Inicialización al cargar la página
-window.onload = function () {
-    cargarJugadores();
-    conectarSSE();
-};
-
-
-
-//Desactivamos el reinicio de la página al enviar los formularios.
-document.getElementById('form').addEventListener('submit', function(e) {
-    e.preventDefault(); // Evita el comportamiento por defecto (recargar)
-});
-
-
-
-
-
-
-// Control Botonera
+// Configurar acciones de los botones
 function setupButtonActions() {
     const buttons = document.querySelectorAll('.action-btn');
 
-    if (buttons.length === 0) {
+    if (!buttons.length) {
         console.error('No se encontraron botones con clase .action-btn');
         return;
     }
@@ -147,9 +114,7 @@ function setupButtonActions() {
                 body: JSON.stringify(payload)
             });
 
-            if (!response.ok) throw new Error(`Error ${response.status}`);
             const result = await response.json();
-
             alert(result.message || 'Mensaje enviado');
         } catch (error) {
             console.error(error);
@@ -174,23 +139,15 @@ function setupButtonActions() {
 
             let endpoint, payload, confirmMessage;
 
-            switch(action) {
+            switch (action) {
                 case 'reiniciar-servidor':
-                    confirmMessage = '¿Está seguro de reiniciar el servidor? <br> ¡Esto desconectará a todos los jugadores!';
-                    endpoint = '/enviar-senal';
-                    payload = {
-                        tipo: 'reiniciar-servidor',
-                        contenido: 'Reiniciar'
-                    };
+                    confirmMessage = '¿Está seguro de reiniciar el servidor? Esto desconectará a todos los jugadores.';
+                    payload = { tipo: 'reiniciar-servidor', contenido: 'Reiniciar' };
                     break;
 
                 case 'apagar-servidor':
-                    confirmMessage = '¿Está seguro de APAGAR el servidor? <br> ¡Esto desconectará a todos los jugadores!';
-                    endpoint = '/enviar-senal';
-                    payload = {
-                        tipo: 'apagar-servidor',
-                        contenido: 'Apagar'
-                    };
+                    confirmMessage = '¿Está seguro de APAGAR el servidor? Esto desconectará a todos los jugadores.';
+                    payload = { tipo: 'apagar-servidor', contenido: 'Apagar' };
                     break;
 
                 case 'anunciar-servidor':
@@ -209,21 +166,14 @@ function setupButtonActions() {
                 this.disabled = true;
                 this.classList.add('loading');
 
-                const response = await fetch(endpoint, {
+                const response = await fetch('/enviar-senal', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
                 const result = await response.json();
                 alert(result.message || 'Acción completada');
-
             } catch (error) {
                 console.error('Error en la acción:', error);
                 alert(`Error: ${error.message}`);
@@ -235,33 +185,21 @@ function setupButtonActions() {
     });
 }
 
-
-
-
-
-
-
-
-// Inicialización segura cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
+// Inicialización principal
+document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM completamente cargado - Inicializando...');
-    
-    // Configurar formulario si existe
+
     const form = document.getElementById('form');
     if (form) {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function (e) {
             e.preventDefault();
             console.log('Formulario prevenido');
         });
     } else {
         console.warn('Formulario no encontrado');
     }
-    
-    // Configurar botones
+
     setupButtonActions();
-    
-    // Iniciar otras funciones
     cargarJugadores();
     conectarSSE();
 });
-  
