@@ -28,7 +28,7 @@ function actualizarListaJugadores(jugadores) {
 // Función para cargar jugadores (reutiliza actualizarListaJugadores)
 async function cargarJugadores() {
     try {
-        const res = await fetch('/back/jugadores');
+        const res = await fetch('/jugadores');
         const data = await res.json();
         actualizarListaJugadores(data.jugadores);
     } catch (error) {
@@ -38,7 +38,7 @@ async function cargarJugadores() {
 
 // Conexión SSE para actualizaciones en tiempo real
 function conectarSSE() {
-    const eventSource = new EventSource('/back/stream');
+    const eventSource = new EventSource('/stream');
 
     eventSource.addEventListener('jugadores-update', (event) => {
         const data = JSON.parse(event.data);
@@ -106,7 +106,7 @@ function setupButtonActions() {
             botonActual.disabled = true;
             botonActual.classList.add('loading');
 
-            const response = await fetch('/back/enviar-senal', {
+            const response = await fetch('/enviar-senal', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -142,7 +142,7 @@ function setupButtonActions() {
             switch(action) {
                 case 'reiniciar-servidor':
                     confirmMessage = '¿Está seguro de reiniciar el servidor? <br> ¡Esto desconectará a todos los jugadores!';
-                    endpoint = '/back/enviar-senal';
+                    endpoint = '/enviar-senal';
                     payload = {
                         tipo: 'reiniciar-servidor',
                         contenido: 'Reiniciar'
@@ -151,7 +151,7 @@ function setupButtonActions() {
 
                 case 'apagar-servidor':
                     confirmMessage = '¿Está seguro de APAGAR el servidor? <br> ¡Esto desconectará a todos los jugadores!';
-                    endpoint = '/back/enviar-senal';
+                    endpoint = '/enviar-senal';
                     payload = {
                         tipo: 'apagar-servidor',
                         contenido: 'Apagar'

@@ -1,13 +1,28 @@
+//Importaciones
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 const cors = require('cors');
 const app = express();
+
+
+
+
+// Variables públicas
+
+let servidor_status = false;
+let clients = [];
+let ultimaSenal = null;
 const PORT = 3000;
 const TOKEN_CONEXION = "tOkEn/ComRbX";
 
+
+
+
 // Middleware general
+
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -21,10 +36,6 @@ app.use(express.static(path.join(__dirname, 'Frontend')));
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
-
-
-
-
 
 
 
@@ -42,10 +53,11 @@ app.get('/terms', (req, res) => {
 
 
 
-// SSE (Server-Sent Events)
-let clients = [];
+// SSE (Server-Sent Events) Para hacer polling desde el servidor (detectar eventos sin necesidad de escuchar) 
+// contiene bloques de escucha en tiempo real:
 
-app.get('/back/stream', (req, res) => {
+
+app.get('/stream', (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
@@ -64,7 +76,7 @@ app.get('/back/stream', (req, res) => {
 
 
 // Ruta para guardar lista de jugadores enviada por Roblox
-app.post('/back/jugadores', (req, res) => {
+app.post('/jugadores', (req, res) => {
     try {
         const lista = req.body.jugadores;
         const archivoJugadores = path.join(__dirname, 'jugadores.json');
@@ -89,7 +101,7 @@ app.post('/back/jugadores', (req, res) => {
 
 
 // Ruta para devolver los jugadores
-app.get('/back/jugadores', (req, res) => {
+app.get('/jugadores', (req, res) => {
     const archivoJugadores = path.join(__dirname, 'jugadores.json');
     const data = fs.readFileSync(archivoJugadores, 'utf-8');
     res.json(JSON.parse(data));
@@ -101,10 +113,10 @@ app.get('/back/jugadores', (req, res) => {
 
 
 // Rutas para recibir la info del DOM y enviar señales a Roblox
-let ultimaSenal = null;
+
 
 // Ruta POST para establecer una señal (botonera)
-app.post('/back/enviar-senal', (req, res) => {
+app.post('/enviar-senal', (req, res) => {
     const { tipo, contenido } = req.body;
 
     if (!tipo || !contenido) {
@@ -121,7 +133,7 @@ app.post('/back/enviar-senal', (req, res) => {
 });
 
 // Nueva ruta GET para que Roblox lea la última señal
-app.get('/back/enviar-senal', (req, res) => {
+app.get('/enviar-senal', (req, res) => {
     if (!ultimaSenal) {
         return res.json({ resultado: { status: "Ninguna señal disponible" } });
     }
@@ -176,7 +188,7 @@ app.get('/oauth/callback', async (req, res) => {
 
 
 // Guardar mensaje desde formulario web
-app.post('/back/guardarMensaje', (req, res) => {
+app.post('/guardarMensaje', (req, res) => {
     const mensaje = req.body.mensaje;
     if (!mensaje) return res.status(400).send('No se recibió mensaje.');
 
@@ -195,7 +207,7 @@ app.post('/back/guardarMensaje', (req, res) => {
 
 
 // Ofrecer mensaje a Roblox (lectura por GET)
-app.get('/back/OfrecerMensaje', (req, res) => {
+app.get('/OfrecerMensaje', (req, res) => {
     const mensajePath = 'mensaje.txt';
 
     if (fs.existsSync(mensajePath)) {
@@ -213,7 +225,7 @@ app.get('/back/OfrecerMensaje', (req, res) => {
 
 
 // Recibir señal directa desde Roblox y reenviarla por SSE
-app.post('/back/senal', express.json(), (req, res) => {
+app.post('/senal', express.json(), (req, res) => {
     const contenido = req.body;
     clients.forEach(client => {
         client.write(`data: ${JSON.stringify(contenido)}\n\n`);
