@@ -1,15 +1,25 @@
+//Variables globales
+const cronometro = false;
+
+
+
 // Función para actualizar la lista de jugadores en el DOM
 function actualizarListaJugadores(jugadores) {
     const contenedor = document.querySelector('.JugadoresLista');
+    const contadorJugadores = document.querySelector('.jugadores');
+    const actividadServer = document.querySelector('.estado');
+
+    const jugadoresAux = 0;
     if (!contenedor) {
         console.error('Contenedor de jugadores no encontrado');
         return;
     }
 
-    contenedor.innerHTML = '';
+    contenedor.innerHTML = ``;
+    contadorJugadores.innerHTML = ``;
+    actividadServer.innerHTML = ``;
 
     jugadores.forEach(jugador => {
-        const avatarUrl = jugador.avatarData || `https://placehold.co/150x150?text=Sin+Avatar`;
 
         const jugadorElement = document.createElement('div');
         jugadorElement.className = 'jugador';
@@ -22,7 +32,28 @@ function actualizarListaJugadores(jugadores) {
         `;
 
         contenedor.appendChild(jugadorElement);
+        jugadoresAux ++;
     });
+    switch (jugadoresAux) {
+        case 1:
+            contadorJugadores.innerHTML = `<span style="color=red"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
+        break;
+
+        case 2:
+            contadorJugadores.innerHTML = `<span style="color=orange"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
+        break;
+    
+        default:
+            contadorJugadores.innerHTML = `<span style="color=green"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
+        break;
+    }
+    if(jugadoresAux == 0){
+        actividadServer.innerHTML = `<span class="actividad text-danger">Inactivo </span><img src="Recursos/Led apagado.png" alt=""></img>';`
+    }else{
+        actividadServer.innerHTML = `<span class="actividad text-success">Activo </span><img src="Recursos/Led encendido.png" alt=""></img>`  
+        cronometro = true;
+    }
+    
 }
 
 // Función para cargar jugadores (reutiliza actualizarListaJugadores)
