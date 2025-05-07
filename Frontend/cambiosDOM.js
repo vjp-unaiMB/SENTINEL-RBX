@@ -22,12 +22,22 @@ function actualizarDatosServidor(jugadores) {
         const jugadorElement = document.createElement('div');
         jugadorElement.className = 'jugador';
         jugadorElement.innerHTML = `
-            <p><strong>Nombre:</strong> ${jugador.name}</p>
-            <p><strong>ID:</strong> ${jugador.userId}</p>
-            <img src="https://thumbnails.roblox.com/v1/users/avatar?userIds=${jugador.userId}&size=150x150&format=Png&isCircular=false" 
-                alt="Avatar de ${jugador.name}"
-                onerror="this.src='https://placehold.co/150x150?text=Sin+Avatar'; this.style.opacity='0.5'">
+
+
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title"> ${jugador.name}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">ID: ${jugador.userId}</h6>
+                    <img src="https://thumbnails.roblox.com/v1/users/avatar?userIds=${jugador.userId}&size=150x150&format=Png&isCircular=false" 
+                    alt="Avatar de ${jugador.name}"
+                    onerror="this.src='https://placehold.co/150x150?text=Sin+Avatar'; this.style.opacity='0.5'">
+                    <a href="#" class="card-link">Expulsar</a>
+                    <a href="#" class="card-link">Mensaje</a>
+                </div>
+            </div>
         `;
+
+
 
         contenedor.appendChild(jugadorElement);
         jugadoresAux++;

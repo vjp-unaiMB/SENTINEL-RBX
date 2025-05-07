@@ -19,68 +19,62 @@
 
     <header class="container gris d-flex flex-row justify-content-between w-80 text-white">
         <a href="/" class="logo"><img src="Recursos/Logo.png" alt=""></a>
-        <p class="color-white d-flex justify-content-center align-items-center"><span class="verde">CONEXIÓN:</span> Sentinel-RBX (Roblox)</p>
+        <p class="color-white d-flex justify-content-center align-items-center"><span class="verde">CONEXIÓN: </span> Sentinel-RBX DevPlace</p>
     </header>
 
 
-    <main class="container-fluid text-white grisClaro">
+    <main class="container-fluid text-white grisClaro d-flex flex-column p-5">
 
-        <div class="contenido">
-            <div class="fil fil1">
-
-                <!-- Estadísticas generales -->
-                <div class="server-status d-flex justify-content-center align-items-center w-100 w-sm-50">
-                    <h1>Estado del Servidor</h1>
-                    <div class="status display flex flex-row-reverse" id="status">
-                        <div class="estado">
-                            
-                        </div>
-                        <div class="jugadores">
-                            
-                        </div>
-                        <div class="tiempo"> 
-                            <span>Tiempo activo : <span id="cronometro"></span></span>
-                            
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Botonera -->
-                <div class="botonera d-flex justify-content-center align-items-center w-100 w-sm-50">
-                    <button id="btnApagar" class="action-btn bg-danger" data-action="apagar-servidor">
-                    </button>
-                    
-                    <button id="btnReiniciar" class="action-btn bg-danger" data-action="reiniciar-servidor">
-                    </button>
-                
-                    <button id="btnAnuncio" class="action-btn bg-warning" data-action="anunciar-servidor">   
-                    </button>
-
-                    <!-- Formulario emergente -->
-                    <div id="formularioEmergente" class="modal container-fluid">
-                        <div class="modal-contenido ">
-                          <span id="cerrarFormulario" class="cerrar">&times;</span>
-                          <h2>Enviar Mensaje Global</h2>
-                          <textarea id="mensajeGlobal"></textarea>
-                          <button id="enviarMensaje" class="">Enviar</button>
-                        </div>
-                    </div>
-  
+        <!-- Fila 1: Estadísticas + Botonera en horizontal -->
+        <div class="Fila1 d-flex flex-row flex-wrap">
+            <!-- Estadísticas generales -->
+            <div class="server-status d-flex flex-column  col-12 col-md-6">
+                <div class="estado"></div>
+                <div class="jugadores"></div>
+                <div class="tiempo">
+                    <span>Tiempo activo : <span id="cronometro"></span></span>
                 </div>
             </div>
-            <div class="fil fil2">
-                <div>
-                    <h2>Lista de Jugadores</h2>
-                    <div class="JugadoresLista" id="JugadoresLista">
+    
+            <!-- Botonera -->
+             
+            <div class="botonera d-flex justify-content-center align-items-center flex-wrap col-12 col-md-6 p-5">
+                <div class="boton m-2">
+                    <button id="btnApagar" class="action-btn bg-danger" data-action="apagar-servidor"></button>
+                    <p class="mt-2 text-center">Apagar servidor [ ! ]</p>
+                </div>
+                <div class="boton m-2">
+                    <button id="btnReiniciar" class="action-btn bg-danger" data-action="reiniciar-servidor"></button>
+                    <p class="mt-2 text-center">Reiniciar servidor [ ! ]</p>
+                </div>
+                <div class="boton m-2">
+                    <button id="btnAnuncio" class="action-btn bg-warning" data-action="anunciar-servidor"></button>
+                    <p class="mt-2 text-center">Mensaje global</p>
+                </div>
+    
+                <!-- Formulario emergente -->
+                <div id="formularioEmergente" class="modal container-fluid">
+                    <div class="modal-contenido d-flex flex-column">
+                        <span id="cerrarFormulario" class="cerrar">&times;</span>
+                        <h2>Enviar Mensaje Global</h2>
+                        <textarea id="mensajeGlobal"></textarea>
+                        <button id="enviarMensaje">Enviar</button>
                     </div>
                 </div>
-            </div> 
-        </div> 
-
+            </div>
+        </div>
+    
+        <!-- Fila 2: Lista de jugadores ocupa todo -->
+        <div class="Fila2 mt-4">
+            <h2>Lista de Jugadores</h2>
+            <div class="JugadoresLista d-flex flex-row" id="JugadoresLista" >
+                <!-- Lista se llenará dinámicamente -->
+            </div>
+        </div>
+    
         <script src="cambiosDOM.js"></script>
-
     </main>
+    
         
 
     <footer class="container text-white">
