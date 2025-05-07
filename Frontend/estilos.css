@@ -1,5 +1,7 @@
 
-
+main{
+    height: 80vh;
+}
 .gris{
     background-color: #212225;
 }
@@ -26,17 +28,7 @@
     color: #007222;
 }
 
-.gradiente{
-    background: linear-gradient(0deg,rgba(33, 34, 37, 1) 0%, rgba(42, 43, 46, 1) 100%);
-    height: 4px;
-    width: 100vw;
-}
 
-.gradiente2{
-    background: linear-gradient(180deg,rgba(33, 34, 37, 1) 0%, rgba(42, 43, 46, 1) 100%);
-    height: 4px;
-    width: 100vw;
-}
 
 img{
     width: 75px;
@@ -45,8 +37,8 @@ img{
 }
 
 .botonera > button{
-    min-width: 100px;
-    min-height: 100px;
+    min-width: 150px;
+    min-height: 150px;
     cursor: pointer;
     border-radius: 10px;
     background-size: cover;

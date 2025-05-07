@@ -1,5 +1,6 @@
-// Variables globales
-let cronometroEstado = false;
+let segundos = 0;
+let intervalo = null;
+let cronometroElement = null;
 
 // Función para actualizar la lista de jugadores en el DOM
 function actualizarDatosServidor(jugadores) {
@@ -35,39 +36,41 @@ function actualizarDatosServidor(jugadores) {
 
     if (jugadoresAux === 0) {
         actividadServer.innerHTML = `<span class="actividad text-danger">Inactivo </span><img src="Recursos/Led apagado.png" alt="">`;
-        cronometroEstado = false;
+        iniciarCronometro(false);
     } else {
         actividadServer.innerHTML = `<span class="actividad text-success">Activo </span><img src="Recursos/Led encendido.png" alt="">`;
-
         let color = jugadoresAux === 1 ? 'red' : jugadoresAux === 2 ? 'orange' : 'green';
         contadorJugadores.innerHTML = `<span style="color: ${color}"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
-        cronometroEstado = true;
+        iniciarCronometro(true);
     }
-    cronometro(cronometroEstado);
 }
 
+function iniciarCronometro(estado) {
+    if (!cronometroElement) {
+        cronometroElement = document.getElementById("cronometro");
+    }
 
-
-
-function cronometro(cronometroEstado){
-    const cronometroElement = document.getElementById("cronometro"); 
-    if (cronometroEstado ) {
-        setInterval(actualizarCronometro, 1000);
-    }else{
-        cronometroElement.textContent = "00:00:00";
+    if (estado) {
+        if (!intervalo) { // Solo si no hay uno ya
+            intervalo = setInterval(actualizarCronometro, 1000);
+        }
+    } else {
+        clearInterval(intervalo);
+        intervalo = null;
+        segundos = 0;
+        if (cronometroElement) {
+            cronometroElement.textContent = "00:00:00";
+        }
     }
 }
 
 function actualizarCronometro() {
     segundos++;
-
     const hrs = String(Math.floor(segundos / 3600)).padStart(2, '0');
     const mins = String(Math.floor((segundos % 3600) / 60)).padStart(2, '0');
     const secs = String(segundos % 60).padStart(2, '0');
-
     cronometroElement.textContent = `${hrs}:${mins}:${secs}`;
 }
-
 
 
 
