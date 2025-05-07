@@ -1,8 +1,8 @@
 // Variables globales
-let cronometro = false;
+let cronometroEstado = false;
 
 // Función para actualizar la lista de jugadores en el DOM
-function actualizarListaJugadores(jugadores) {
+function actualizarDatosServidor(jugadores) {
     const contenedor = document.querySelector('.JugadoresLista');
     const contadorJugadores = document.querySelector('.jugadores');
     const actividadServer = document.querySelector('.estado');
@@ -35,14 +35,49 @@ function actualizarListaJugadores(jugadores) {
 
     if (jugadoresAux === 0) {
         actividadServer.innerHTML = `<span class="actividad text-danger">Inactivo </span><img src="Recursos/Led apagado.png" alt="">`;
+        cronometroEstado = false;
     } else {
         actividadServer.innerHTML = `<span class="actividad text-success">Activo </span><img src="Recursos/Led encendido.png" alt="">`;
 
         let color = jugadoresAux === 1 ? 'red' : jugadoresAux === 2 ? 'orange' : 'green';
         contadorJugadores.innerHTML = `<span style="color: ${color}"><strong>Jugadores: </strong> ${jugadoresAux}</span>`;
-        cronometro = true;
+        cronometroEstado = true;
+    }
+    cronometro(cronometroEstado);
+}
+
+
+
+
+function cronometro(cronometroEstado){
+    const cronometroElement = document.getElementById("cronometro"); 
+    if (cronometroEstado ) {
+        setInterval(actualizarCronometro, 1000);
+    }else{
+        cronometroElement.textContent = "00:00:00";
     }
 }
+
+function actualizarCronometro() {
+    segundos++;
+
+    const hrs = String(Math.floor(segundos / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((segundos % 3600) / 60)).padStart(2, '0');
+    const secs = String(segundos % 60).padStart(2, '0');
+
+    cronometroElement.textContent = `${hrs}:${mins}:${secs}`;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 // Cargar jugadores desde el servidor
 async function cargarJugadores() {
@@ -50,7 +85,7 @@ async function cargarJugadores() {
         const res = await fetch('/jugadores');
         const data = await res.json();
         console.log("Jugadores recibidos:", data);
-        actualizarListaJugadores(data.jugadores);
+        actualizarDatosServidor(data.jugadores);
     } catch (error) {
         console.error('Error cargando jugadores:', error);
     }
@@ -62,7 +97,7 @@ function conectarSSE() {
 
     eventSource.addEventListener('jugadores-update', (event) => {
         const data = JSON.parse(event.data);
-        actualizarListaJugadores(data.jugadores);
+        actualizarDatosServidor(data.jugadores);
         console.log('Lista de jugadores actualizada en tiempo real');
     });
 

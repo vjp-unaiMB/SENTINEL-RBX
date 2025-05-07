@@ -19,7 +19,7 @@
 
     <header class="container gris d-flex flex-row justify-content-between w-80 text-white">
         <a href="/" class="logo"><img src="Recursos/Logo.png" alt=""></a>
-        <p class="color-white"><span class="verde">CONEXIÓN:</span> Sentinel-RBX (Roblox)</p>
+        <p class="color-white d-flex justify-content-center align-items-center"><span class="verde">CONEXIÓN:</span> Sentinel-RBX (Roblox)</p>
     </header>
 
 
@@ -29,7 +29,7 @@
             <div class="fil fil1">
 
                 <!-- Estadísticas generales -->
-                <div class="server-status">
+                <div class="server-status d-flex justify-content-center align-items-center w-100 w-sm-50">
                     <h1>Estado del Servidor</h1>
                     <div class="status display flex flex-row-reverse" id="status">
                         <div class="estado">
@@ -39,21 +39,22 @@
                             
                         </div>
                         <div class="tiempo"> 
-                            <span>Tiempo: </span>
+                            <span>Tiempo activo : <span id="cronometro"></span></span>
+                            
                         </div>
                     </div>
 
                 </div>
 
                 <!-- Botonera -->
-                <div class="botonera">
+                <div class="botonera d-flex justify-content-center align-items-center w-100 w-sm-50">
                     <button id="btnApagar" class="action-btn bg-danger" data-action="apagar-servidor">
                     </button>
                     
-                    <button id="btnReiniciar" class="action-btn bg-warning" data-action="reiniciar-servidor">
+                    <button id="btnReiniciar" class="action-btn bg-danger" data-action="reiniciar-servidor">
                     </button>
                 
-                    <button id="btnAnuncio" class="action-btn bg-primary" data-action="anunciar-servidor">   
+                    <button id="btnAnuncio" class="action-btn bg-warning" data-action="anunciar-servidor">   
                     </button>
 
                     <!-- Formulario emergente -->
