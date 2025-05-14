@@ -6,7 +6,7 @@ const path = require('path');
 const axios = require('axios');
 const cors = require('cors');
 const app = express();
-
+const pool = require('./conexionBD.js'); // Conexión con la BD
 
 
 
@@ -232,3 +232,10 @@ app.post('/senal', express.json(), (req, res) => {
     });
     res.send({ status: 'ok' });
 });
+
+
+
+
+
+
+
