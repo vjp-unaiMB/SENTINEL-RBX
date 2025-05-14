@@ -10,6 +10,15 @@ main{
     height: 80vh;
 }
 
+header i:hover{
+    color: #46ff3c;
+    transform: scale(1.2);
+    transition: all 0.3s ease-in-out;
+}
+i:not(:hover) {
+    transform: scale(1.0);
+    transition: all 0.3s ease-in-out;
+}
 
 
 .gris{
@@ -38,7 +47,9 @@ main{
     color: #007222;
 }
 
-
+.Fila{
+    justify-content: space-between; 
+}
 
 img{
     width: 75px;
@@ -46,23 +57,50 @@ img{
     padding: 10px;
 }
 
-.boton{
-    padding-right: 15px;
-    height: 170px;
-    width: 175px;
+
+
+.botonera{
+    border-radius: 20px 0px 0px 20px;
+    padding: 0px    20px;
 }
+.botonera, .server-status{
+    height: 220px;
+    background-color: #18181A;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.server-status{
+    border-radius:0px 20px 20px 0px;
+}
+
+
+.boton{
+    margin-top: 40px;
+    margin-left: 20px;
+}
+
+.estadisticas{
+    margin-right: 40px;
+    margin-top: -20px;
+}
+
+
 .boton p{
     opacity: 0;
 }
+ 
 .boton:hover p{
     transition: 1s;
     opacity: 1;
-    
+
 }
 
 .boton button{
-    min-width: 150px;
-    min-height: 150px;
+    width: 150px;
+    height: 150px;
     cursor: pointer;
     border-radius: 10px;
     background-size: cover;
@@ -117,38 +155,38 @@ button:not(:hover) {
 
 /* Contenido del modal */
 .modal-contenido {
-background-color: #212225;
-padding: 20px;
-position: absolute;
-top: 0; right: 0; bottom: 0;
-border: 1px solid #131313;
+    background-color: #212225;
+    padding: 20px;
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    border: 1px solid #131313;
 }
 
 /* Botón de cerrar */
 .cerrar {
-color: #aaa;
-float: right;
-font-size: 28px;
-font-weight: bold;
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
 }
 
 .cerrar:hover,
 .cerrar:focus {
-color: black;
-text-decoration: none;
-cursor: pointer;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .modal-contenido textarea{
     margin-top: 20px;
-width: 100%;
-height: 70%;
-border-radius: 10px;
-background-color: #363636;
-color: white;
-font-family: "Anta", sans-serif;
-font-weight: 400;
-font-style: normal;
+    width: 100%;
+    height: 70%;
+    border-radius: 10px;
+    background-color: #363636;
+    color: white;
+    font-family: "Anta", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 .modal-contenido button{
@@ -157,5 +195,38 @@ font-style: normal;
     border-radius: 10px;
     color: white;
     margin: 10px 0px;
-    padding: 10px;;
+    padding: 10px;
 }
+
+.cajaBotonera, .cajaStatus{
+    height: 100%;
+
+    background-color: #2A2B2E;
+
+    color: #007222;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: space-evenly;
+    margin:  0px 30px;
+    padding:  0px 30px;
+
+}
+
+.cajaBotonera img{
+    height: 120px;
+    width: 110px;
+}
+.cajaStatus i{
+    color:#212225;
+    font-size: 5em;
+}
+
+.panel{
+    background-image: url(Recursos/Panel.png);
+    width: 490px;
+    background-size: cover;
+    transform: scale(1.2);
+}
+

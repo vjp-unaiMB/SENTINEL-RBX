@@ -30,7 +30,7 @@ function actualizarDatosServidor(jugadores) {
                     <h6 class="card-subtitle mb-2 text-muted">ID: ${jugador.userId}</h6>
                     <img src="https://thumbnails.roblox.com/v1/users/avatar?userIds=${jugador.userId}&size=150x150&format=Png&isCircular=false" 
                     alt="Avatar de ${jugador.name}"
-                    onerror="this.src='https://placehold.co/150x150?text=Sin+Avatar'; this.style.opacity='0.5'">
+                    onerror="this.src='Recursos/Michael.png'; this.style.opacity='0.5'">
                     <a href="#" class="card-link">Expulsar</a>
                     <a href="#" class="card-link">Mensaje</a>
                 </div>
@@ -41,11 +41,11 @@ function actualizarDatosServidor(jugadores) {
 
         contenedor.appendChild(jugadorElement);
         jugadoresAux++;
-        console.log("Jugador #" + jugadoresAux, jugador);
+        console.log("Jugador " + jugadoresAux, jugador);
     });
 
     if (jugadoresAux === 0) {
-        actividadServer.innerHTML = `<span class="actividad text-danger">Inactivo </span><img src="Recursos/Led apagado.png" alt="">`;
+        actividadServer.innerHTML = `<span class="actividad text-white">Inactivo </span><img src="Recursos/Led apagado.png" alt="">`;
         iniciarCronometro(false);
     } else {
         actividadServer.innerHTML = `<span class="actividad text-success">Activo </span><img src="Recursos/Led encendido.png" alt="">`;
