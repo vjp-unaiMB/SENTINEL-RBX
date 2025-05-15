@@ -1,14 +1,13 @@
 // Base de datos PostgreSQL configuración
+
+require('dotenv').config(); 
+
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  user: 'heimer',
-  host: 'dpg-d0ifkbemcj7s73dk5pmg-a',
-  database: 'sentinel_bd',
-  password: 'TU_CONTRASEÑA',
-  port: 5432,
+  connectionString: process.env.DATABASE_URL, // <-- AQUÍ usu la variable del .env
   ssl: {
-    rejectUnauthorized: false
+    rejectUnauthorized: false // Render usa SSL sin certificado autofirmado
   }
 });
 

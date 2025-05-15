@@ -1,12 +1,14 @@
 //Importaciones
 
 const express = require('express');
+const app = express();
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 const cors = require('cors');
-const app = express();
 const pool = require('./conexionBD.js'); // Conexión con la BD
+
+const bcrypt = require('bcrypt'); //Cifrado de contraseñas
 
 
 
@@ -33,13 +35,23 @@ app.use(express.static(path.join(__dirname, 'Frontend')));
 
 
 // Iniciar servidor
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    await crearTablaUsuarios();
 });
 
 
 
-// Rutas legales
+// Rutas generales
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Frontend', 'index.html'));
+});
+
+app.get('/panel', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Frontend', 'panel.html')); // antes era index.html
+});
+
 app.get('/privacy', (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend', 'Legal', 'privacy.html'));
 });
@@ -236,6 +248,112 @@ app.post('/senal', express.json(), (req, res) => {
 
 
 
+
+
+// Configuración de la base de datos
+
+app.use(express.json());
+
+// GET: Ver todos los usuarios
+app.get('/verUsuarios', async (req, res) => {
+  try {
+    const resultado = await pool.query('SELECT * FROM usuarios');
+    res.json(resultado.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al obtener los usuarios');
+  }
+});
+
+// POST: Añadir un nuevo usuario
+app.post('/usuarios', async (req, res) => {
+  const { nombre, password } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const resultado = await pool.query(
+      'INSERT INTO usuarios (nombre, password) VALUES ($1, $2) RETURNING *',
+      [nombre, hashedPassword]
+    );
+    res.status(201).json(resultado.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error al insertar usuario');
+  }
+});
+
+// crear tabla de usuarios si no existe
+// async function crearTablaUsuarios() {
+//   try {
+//     await pool.query(`
+//       CREATE TABLE IF NOT EXISTS usuarios (
+//         id SERIAL PRIMARY KEY,
+//         nombre VARCHAR(255) UNIQUE NOT NULL,
+//         password VARCHAR(255) NOT NULL
+//       )
+//     `);
+//     console.log('Tabla de usuarios creada o ya existe');
+//   } catch (error) {
+//     console.error('Error al crear la tabla de usuarios:', error);
+//   }
+// }
+
+
+// Función extendida para crear tabla + usuario por defecto
+async function crearTablaUsuarios() {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS usuarios (
+        id SERIAL PRIMARY KEY,
+        nombre VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL
+      )
+    `);
+    console.log('Tabla de usuarios creada o ya existe');
+
+    const existe = await pool.query('SELECT * FROM usuarios WHERE nombre = $1', ['Mikael_Wittman']);
+    if (existe.rows.length === 0) {
+      const hash = await bcrypt.hash('1234', 10);
+      await pool.query('INSERT INTO usuarios (nombre, password) VALUES ($1, $2)', ['Mikael_Wittman', hash]);
+      console.log('Usuario por defecto Mikael_Wittman creado');
+    } else {
+      console.log('El usuario por defecto ya existe');
+    }
+
+  } catch (error) {
+    console.error('Error al crear la tabla o usuario por defecto:', error);
+  }
+}
+
+// Ruta POST para login desde formulario sin JS externo
+app.post('/login', async (req, res) => {
+  const { nombre, password } = req.body;
+
+  if (!nombre || !password) {
+    return res.send('Faltan datos. Vuelve atrás e intenta de nuevo.');
+  }
+
+  try {
+    const resultado = await pool.query('SELECT * FROM usuarios WHERE nombre = $1', [nombre]);
+
+    if (resultado.rows.length === 0) {
+      return res.send('Usuario no encontrado.');
+    }
+
+    const usuario = resultado.rows[0];
+    const coincide = await bcrypt.compare(password, usuario.password);
+
+    if (coincide) {
+      return res.redirect('/panel');
+    } else {
+      return res.send('Contraseña incorrecta.');
+    }
+
+  } catch (error) {
+    console.error('Error en login:', error);
+    res.status(500).send('Error interno del servidor');
+  }
+});
 
 
 
