@@ -52,11 +52,11 @@ app.get('/panel', (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend', 'panel.html')); // antes era index.html
 });
 
-app.get('/privacy', (req, res) => {
+app.get('/privacidad', (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend', 'Legal', 'privacy.html'));
 });
 
-app.get('/terms', (req, res) => {
+app.get('/terminos', (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend', 'Legal', 'terms.html'));
 });
 
