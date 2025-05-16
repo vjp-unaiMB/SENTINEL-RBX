@@ -355,5 +355,15 @@ app.post('/login', async (req, res) => {
   }
 });
 
-
+// Ruta para devolver la lista de usuarios administradores desde la BD a roblox
+app.get('/admins', async (req, res) => {
+  try {
+      const resultado = await pool.query('SELECT nombre FROM usuarios');
+      const nombres = resultado.rows.map(row => row.nombre);
+      res.json({ admins: nombres });
+  } catch (error) {
+      console.error('Error al obtener la lista de admins:', error);
+      res.status(500).json({ error: 'Error al obtener los administradores' });
+  }
+});
 
