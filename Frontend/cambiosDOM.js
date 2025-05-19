@@ -24,11 +24,11 @@ function actualizarDatosServidor(jugadores) {
         jugadorElement.innerHTML = `
 
 
-            <div class="card" style="width: 45%;">
+            <div class="card" style="width: 300px; background-color: #212529; border-radius: 10px; margin: 10px;">
                 <div class="card-body">
                     <h5 class="card-title"> ${jugador.name}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">ID: ${jugador.userId}</h6>
-                    <img src="https://thumbnails.roblox.com/v1/users/avatar?userIds=${jugador.userId}&size=150x150&format=Png&isCircular=false" 
+                    <img src="https://thumbnails.roblox.com/v1/users/avatar?userIds=${jugador.userId}&size=150x150&format=Png&isCircular=false"  style=" border-radius: 200px;"
                     alt="Avatar de ${jugador.name}"
                     onerror="this.src='Recursos/Michael.png'; this.style.opacity='0.5'">
                     <button type="button" class="btn btn-danger text-black">Expulsar <i class="fa-solid fa-door-open"></i></button>

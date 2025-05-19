@@ -98,6 +98,10 @@ img{
 
 }
 
+footer{
+    height: 100px;
+}
+
 .boton button{
     width: 150px;
     height: 150px;

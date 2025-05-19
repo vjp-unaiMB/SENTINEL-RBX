@@ -247,10 +247,26 @@ app.post('/senal', express.json(), (req, res) => {
 
 
 
+// Recibir Mensaje Remoto
+app.post('/MensajeRemoto', (req, res) => {
+	const { jugador, userId, mensaje, hora } = req.body;
+	console.log(`[${hora}] Mensaje de ${jugador} (${userId}): ${mensaje}`);
+
+	// Aquí podrías guardarlo en archivo, base de datos o lo que quieras
+	res.status(200).json({ status: "ok" });
+});
 
 
 
-// Configuración de la base de datos
+
+
+
+// CONFIGURACIÓN DE LA BASE DE DATOS
+
+
+
+
+
 
 app.use(express.json());
 
