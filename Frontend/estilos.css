@@ -256,13 +256,12 @@ button:not(:hover) {
 
 .botonForm:hover{
     background-color: #46ff3c;
-
 }
 
 .ZonaMensajes{
     border-radius: 20px 0px 0px 20px;
 }
-#mensajeEmergente{
+#mensajeEmergente,.JugadoresLista{
     width: 90%;
 }
 .mensajeRemoto{

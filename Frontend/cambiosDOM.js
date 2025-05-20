@@ -24,9 +24,9 @@ function actualizarDatosServidor(jugadores) {
         jugadorElement.innerHTML = `
 
 
-            <div class="card" style="width: 80%; background-color:rgb(45, 48, 52); border-radius: 5px; margin: 10px; ">
+            <div class="card" style="width: 100%; background-color:rgb(45, 48, 52); border-radius: 5px; margin: 10px; ">
                 <div class="card-body">
-                    <h5 class="card-title"> ${jugador.name}</h5>
+                    <h5 class="card-title text-white"> ${jugador.name}</h5>
                     <h6 class="card-subtitle mb-2 text-white">ID de jugador 🡺 ${jugador.userId}</h6>
                     <img src="https://thumbnails.roblox.com/v1/users/avatar?userIds=${jugador.userId}&size=150x150&format=Png&isCircular=false"  style=" border-radius: 200px;"
                     alt="Avatar de ${jugador.name}"
