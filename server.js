@@ -253,7 +253,7 @@ app.post('/MensajeRemoto', (req, res) => {
   	const archivoMensaje = path.join(__dirname, 'mensaje.txt');
 
 	// Creamos la línea del mensaje como texto legible
-	const logLinea = `[${hora}] ${jugador} (${userId}): ${mensaje}\n`;
+	const logLinea = `<div class="mensajeRemoto"><i class="fa-solid fa-exclamation"></i>  ${jugador}<span class="mensajeRemotoHora"> (${hora})</span> :<p> ${mensaje}</p></div>`;
 
 	// Escribimos o añadimos al archivo (append, para no sobreescribir cada vez)
 	fs.appendFileSync(archivoMensaje, logLinea);

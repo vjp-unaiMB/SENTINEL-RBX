@@ -63,12 +63,10 @@ img{
     border-radius: 20px 0px 0px 20px;
     padding: 0px    20px;
 }
-.botonera, .server-status, .ZonaJugadores{
+.botonera, .server-status, .ZonaJugadores, .ZonaMensajes{
     height: 220px;
     background-color: #18181A;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+ 
 }
 
 .server-status, .ZonaJugadores{
@@ -208,11 +206,6 @@ button:not(:hover) {
     background-color: #2A2B2E;
 
     color: #007222;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    align-items: center;
-    justify-content: space-evenly;
     margin:  0px 30px;
     width: 200px;
 
@@ -234,7 +227,7 @@ button:not(:hover) {
     transform: scale(1.2);
 }
 
-.ZonaJugadores{
+.ZonaJugadores, .ZonaMensajes{
     width: 40%;
     height: 440px;
 }
@@ -243,11 +236,6 @@ button:not(:hover) {
 .registro{
     background-color:#18181A ;
     color: #007222;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    align-items: center;
-    justify-content: space-evenly;
     height: 400px;
     width: 200px;
     border-radius: 30px;
@@ -269,4 +257,22 @@ button:not(:hover) {
 .botonForm:hover{
     background-color: #46ff3c;
 
+}
+
+.ZonaMensajes{
+    border-radius: 20px 0px 0px 20px;
+}
+#mensajeEmergente{
+    width: 90%;
+}
+.mensajeRemoto{
+    background-color: #2A2B2E;
+    color: #ffffff;
+    border-radius: 20px 20px 20px 20px;
+    width: 100%;
+    margin: 10px 10px;
+    padding: 10px 20px;
+}
+.mensajeRemotoHora{
+    font-size: 1em;
 }

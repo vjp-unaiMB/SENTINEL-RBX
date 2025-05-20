@@ -31,13 +31,14 @@
         <!-- Fila 1: Estadísticas + Botonera en horizontal -->
         <div class="Fila d-flex flex-row space-between mt-5 ">
             <!-- Estadísticas generales -->
-            <div class="server-status d-flex flex-row  ">
-                <div class="cajaStatus">
+            <div class="server-status d-flex flex-row  text-cernter align-items-center">
+                <div class="cajaStatus d-flex flex-column align-items-center justify-content-center">
                     <h2>Servidor</h2>
                     <i class="fa-solid fa-server"></i>
                 </div>
                 <div class="estadisticas d-flex flex-column ">
-                    <div class="estado"></div>
+                    <span>ESTADO 🡖</span>
+                    <div class="estado d-flex justify-content-between align-items-center"></div>
                     <div class="jugadores"></div>
                     <div class="tiempo">
                         <span>Tiempo activo : <span id="cronometro"></span></span>
@@ -47,7 +48,7 @@
             </div>
             <!-- Botonera -->
              
-            <div class="botonera ">
+            <div class="botonera d-flex justify-content-end">
                 <div class="boton">
                     <button id="btnApagar" class="action-btn bg-danger" data-action="apagar-servidor"></button>
                     <p class="mt-1 text-center text-danger">Apagar servidor [ ! ]</p>
@@ -70,7 +71,7 @@
                         <button id="enviarMensaje">Enviar</button>
                     </div>
                 </div>
-                <div class="cajaBotonera">
+                <div class="cajaBotonera d-flex flex-column align-items-center justify-content-center">
                     <h2>Eventos</h2>
                     <img src="Recursos/Logo2.png" alt="">
                 </div>
@@ -78,27 +79,30 @@
         </div>
     
         <!-- Fila 2: Lista de jugadores ocupa todo -->
-        <div class="Fila mt-4 ">
+        <div class="Fila d-flex flex-row space-between mt-5 ">
+
             <div class="ZonaJugadores">
-                <div class="cajaJugadores">
+                <div class="cajaJugadores d-flex flex-column align-items-center justify-content-center">
                     <h2>Jugadores</h2>
                     <i class="fa-solid fa-user-secret"></i>
                 </div>
-                <div class="JugadoresLista d-flex flex-row flex-wrap overflow-auto justify-content-around" id="JugadoresLista" >
+                <div class="JugadoresLista d-flex flex-row overflow-auto" id="JugadoresLista" >
                     <!-- JUGADORES -->  
+                     
                 </div>
             </div> 
             
             
-            <div class="ZonaMensajes">
-                <div class="cajaJugadores">
+            <div class="ZonaMensajes d-flex justify-content-end">
+                <div id="mensajeEmergente">
+                    <!-- MENSAJES -->  
+                </div>
+                <div class="cajaJugadores d-flex flex-column align-items-center justify-content-center">
                     <h2>Mensajes</h2>
                     <i class="fa-solid fa-message"></i>
-                </div>
-                <div id="mensajeEmergente">
-                    <!-- MENSAJES -->
-                </div>
+                </div>           
             </div>  
+
         </div>
 
         <script src="cambiosDOM.js"></script>

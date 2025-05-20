@@ -24,10 +24,10 @@ function actualizarDatosServidor(jugadores) {
         jugadorElement.innerHTML = `
 
 
-            <div class="card" style="width: 300px; background-color: #212529; border-radius: 10px; margin: 10px;">
+            <div class="card" style="width: 100%; background-color:rgb(45, 48, 52); border-radius: 5px; margin: 10px; ">
                 <div class="card-body">
                     <h5 class="card-title"> ${jugador.name}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">ID: ${jugador.userId}</h6>
+                    <h6 class="card-subtitle mb-2 text-white">ID de jugador 🡺 ${jugador.userId}</h6>
                     <img src="https://thumbnails.roblox.com/v1/users/avatar?userIds=${jugador.userId}&size=150x150&format=Png&isCircular=false"  style=" border-radius: 200px;"
                     alt="Avatar de ${jugador.name}"
                     onerror="this.src='Recursos/Michael.png'; this.style.opacity='0.5'">
@@ -233,6 +233,28 @@ function setupButtonActions() {
     });
 }
 
+
+function conectarMensajesRemotos() {
+    const eventSource = new EventSource('/mensajes-stream');
+    const mensajeContenedor = document.getElementById('mensajeEmergente');
+
+    if (!mensajeContenedor) {
+        console.warn("❗ Contenedor de mensajeEmergente no encontrado");
+        return;
+    }
+
+    eventSource.addEventListener('mensaje-remoto', (event) => {
+        const data = JSON.parse(event.data);
+        mensajeContenedor.textContent = data.contenido;
+    });
+
+    eventSource.onerror = (error) => {
+        console.error('❌ Error en mensaje SSE:', error);
+        setTimeout(conectarMensajesRemotos, 5000); // Reintentar
+    };
+}
+
+
 // Inicialización principal
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM completamente cargado - Inicializando...');
@@ -253,22 +275,3 @@ document.addEventListener('DOMContentLoaded', () => {
     conectarMensajesRemotos();
 });
 
-function conectarMensajesRemotos() {
-    const eventSource = new EventSource('/mensajes-stream');
-    const mensajeContenedor = document.getElementById('mensajeEmergente');
-
-    if (!mensajeContenedor) {
-        console.warn("❗ Contenedor de mensajeEmergente no encontrado");
-        return;
-    }
-
-    eventSource.addEventListener('mensaje-remoto', (event) => {
-        const data = JSON.parse(event.data);
-        mensajeContenedor.textContent = data.contenido || "Sin mensajes";
-    });
-
-    eventSource.onerror = (error) => {
-        console.error('❌ Error en mensaje SSE:', error);
-        setTimeout(conectarMensajesRemotos, 5000); // Reintentar
-    };
-}
