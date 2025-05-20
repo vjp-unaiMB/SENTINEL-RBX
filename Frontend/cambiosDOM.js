@@ -250,4 +250,25 @@ document.addEventListener('DOMContentLoaded', () => {
     setupButtonActions();
     cargarJugadores();
     conectarSSE();
+    conectarMensajesRemotos();
 });
+
+function conectarMensajesRemotos() {
+    const eventSource = new EventSource('/mensajes-stream');
+    const mensajeContenedor = document.getElementById('mensajeEmergente');
+
+    if (!mensajeContenedor) {
+        console.warn("❗ Contenedor de mensajeEmergente no encontrado");
+        return;
+    }
+
+    eventSource.addEventListener('mensaje-remoto', (event) => {
+        const data = JSON.parse(event.data);
+        mensajeContenedor.textContent = data.contenido || "Sin mensajes";
+    });
+
+    eventSource.onerror = (error) => {
+        console.error('❌ Error en mensaje SSE:', error);
+        setTimeout(conectarMensajesRemotos, 5000); // Reintentar
+    };
+}

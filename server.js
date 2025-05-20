@@ -250,12 +250,38 @@ app.post('/senal', express.json(), (req, res) => {
 // Recibir Mensaje Remoto
 app.post('/MensajeRemoto', (req, res) => {
 	const { jugador, userId, mensaje, hora } = req.body;
-	console.log(`[${hora}] Mensaje de ${jugador} (${userId}): ${mensaje}`);
+  	const archivoMensaje = path.join(__dirname, 'mensaje.txt');
 
-	// Aquí podrías guardarlo en archivo, base de datos o lo que quieras
+	// Creamos la línea del mensaje como texto legible
+	const logLinea = `[${hora}] ${jugador} (${userId}): ${mensaje}\n`;
+
+	// Escribimos o añadimos al archivo (append, para no sobreescribir cada vez)
+	fs.appendFileSync(archivoMensaje, logLinea);
+
+	console.log(logLinea.trim()); // También lo mostramos en consola
+
 	res.status(200).json({ status: "ok" });
 });
 
+// SSE: Mensajes recibidos desde Roblox
+app.get('/mensajes-stream', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    const interval = setInterval(() => {
+        const archivoMensaje = path.join(__dirname, 'mensaje.txt');
+        if (fs.existsSync(archivoMensaje)) {
+            const contenido = fs.readFileSync(archivoMensaje, 'utf-8');
+            res.write(`event: mensaje-remoto\n`);
+            res.write(`data: ${JSON.stringify({ contenido })}\n\n`);
+        }
+    }, 5000); // Cada 5 segundos
+
+    req.on('close', () => {
+        clearInterval(interval);
+    });
+});
 
 
 
