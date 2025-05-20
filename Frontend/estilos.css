@@ -200,14 +200,14 @@ button:not(:hover) {
     padding: 10px;
 }
 
-.cajaBotonera, .cajaStatus, .cajaJugadores{
+.cajaBotonera, .cajaStatus, .cajaJugadores, .cajaMensajes{
     height: 100%;
 
     background-color: #2A2B2E;
 
     color: #007222;
     margin:  0px 30px;
-    width: 200px;
+    padding: 30px;
 
 }
 
@@ -229,7 +229,8 @@ button:not(:hover) {
 
 .ZonaJugadores, .ZonaMensajes{
     width: 40%;
-    height: 440px;
+    height: 400px;
+    margin-bottom: 40px;
 }
 
 
