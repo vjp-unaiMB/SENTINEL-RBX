@@ -31,8 +31,8 @@ function actualizarDatosServidor(jugadores) {
                     <img src="https://thumbnails.roblox.com/v1/users/avatar?userIds=${jugador.userId}&size=150x150&format=Png&isCircular=false"  style=" border-radius: 200px;"
                     alt="Avatar de ${jugador.name}"
                     onerror="this.src='Recursos/Michael.png'; this.style.opacity='0.5'">
-                    <button type="button" class="btn btn-danger text-black">Expulsar <i class="fa-solid fa-door-open"></i></button>
-                    <button type="button" class="btn btn-warning">Mensaje <i class="fa-solid fa-message"></i></button>
+                    <button type="button" class="btn btn-danger text-black action-btn" data-action="apagar-servidor">Expulsar <i class="fa-solid fa-door-open"></i></button>
+                    <button type="button" class="btn btn-warning action-btn" data-action="anunciar-servidor">Mensaje <i class="fa-solid fa-message"></i></button>
                 </div>
             </div>
         `;
@@ -116,7 +116,7 @@ function conectarSSE() {
 
     eventSource.onerror = (error) => {
         console.error('Error en la conexión SSE:', error);
-        setTimeout(conectarSSE, 5000); // Reintento
+        setTimeout(conectarSSE, 1000); // Reintento
     };
 }
 
