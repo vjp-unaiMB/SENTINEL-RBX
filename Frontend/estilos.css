@@ -276,3 +276,7 @@ button:not(:hover) {
 .mensajeRemotoHora{
     font-size: 1em;
 }
+
+#mensajeEmergente {
+    overflow-x: hidden;  /* Oculta el scroll horizontal */
+}

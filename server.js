@@ -37,9 +37,18 @@ app.use(express.static(path.join(__dirname, 'Frontend')));
 // Iniciar servidor
 app.listen(PORT, async () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
+
+    // VACIAR EL ARCHIVO mensaje.txt al iniciar
+    const mensajePath = path.join(__dirname, 'mensaje.txt');
+    try {
+        fs.writeFileSync(mensajePath, 'NUL_Instruccion'); // O usa '' si quieres vacío
+        console.log('mensaje.txt limpio al iniciar el servidor.');
+    } catch (error) {
+        console.error('Error al limpiar mensaje.txt al iniciar:', error);
+    }
+
     await crearTablaUsuarios();
 });
-
 
 
 // Rutas generales
