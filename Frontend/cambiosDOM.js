@@ -32,15 +32,33 @@ function actualizarDatosServidor(jugadores) {
                     alt="Avatar de ${jugador.name}"
                     onerror="this.src='Recursos/Michael.png'; this.style.opacity='0.5'">
                     <button type="button" class="btn btn-danger text-black">Expulsar <i class="fa-solid fa-door-open"></i></button>
-                    <button type="button" class="btn btn-warning">Mensaje <i class="fa-solid fa-message"></i></button>
+                    <button type="button" class="btn btn-warning btn-mensaje" data-userid="${jugador.userId}" data-username="${jugador.name}"> Mensaje <i class="fa-solid fa-message"></i> </button>
                 </div>
             </div>
+            
+
+            
         `;
 
-
-
         contenedor.appendChild(jugadorElement);
+
+        contenedor.querySelectorAll('.btn-mensaje').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const userId = btn.dataset.userid;
+                const username = btn.dataset.username;
+
+                jugadorActivo = { userId, name: username };
+
+                // Actualizar título del modal
+                document.querySelector('#formularioEmergente h2').innerText = `Enviar Mensaje a ${username}`;
+                
+                // Mostrar modal
+                document.getElementById('formularioEmergente').style.display = 'block';
+            });
+        });
+
         jugadoresAux++;
+
         console.log("Jugador " + jugadoresAux, jugador);
     });
 
@@ -253,6 +271,48 @@ function conectarMensajesRemotos() {
         setTimeout(conectarMensajesRemotos, 5000); // Reintentar
     };
 }
+
+document.getElementById('enviarMensajeA').addEventListener('click', async () => {
+    const mensaje = document.getElementById('mensajeGlobal').value.trim();
+
+    if (!mensaje || !jugadorActivo) {
+        alert('Debes seleccionar un jugador y escribir un mensaje.');
+        return;
+    }
+
+    const hora = new Date().toLocaleTimeString();
+
+    const payload = {
+        jugador: jugadorActivo.name,
+        userId: jugadorActivo.userId,
+        mensaje,
+        hora
+    };
+
+    try {
+        const res = await fetch('/mensajeA', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: jugadorActivo.userId,
+                mensaje: mensaje
+            })
+        });
+
+        const data = await res.json();
+
+        if (data.status === "ok") {
+            alert(`Mensaje enviado a ${jugadorActivo.name}`);
+            document.getElementById('mensajeGlobal').value = '';
+            document.getElementById('formularioEmergente').style.display = 'none';
+        } else {
+            alert('Hubo un problema al enviar el mensaje');
+        }
+    } catch (err) {
+        console.error('Error al enviar mensaje remoto:', err);
+        alert('Error de red o del servidor.');
+    }
+});
 
 
 // Inicialización principal
