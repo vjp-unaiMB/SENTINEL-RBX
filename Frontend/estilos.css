@@ -269,7 +269,7 @@ button:not(:hover) {
     background-color: #2A2B2E;
     color: #ffffff;
     border-radius: 20px 20px 20px 20px;
-    width: 100%;
+    width: 90%;
     margin: 10px 10px;
     padding: 10px 20px;
 }
