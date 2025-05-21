@@ -409,37 +409,3 @@ app.get('/admins', async (req, res) => {
   }
 });
 
-app.post('/mensajeA', async (req, res) => {
-    const { userId, mensaje } = req.body;
-
-    if (!userId || !mensaje) {
-        return res.status(400).json({ status: 'error', message: 'Faltan datos' });
-    }
-
-    const jsonMensaje = {
-        id: userId,
-        mensaje: mensaje
-    };
-
-    try {
-        const response = await fetch('https://tujuego.roblox.com/api/mensajeJugador', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(jsonMensaje)
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            console.error('❌ Error desde Roblox:', data);
-            return res.status(500).json({ status: 'error', message: 'Falló el envío a Roblox' });
-        }
-
-        res.status(200).json({ status: 'ok', message: 'Mensaje enviado a Roblox' });
-
-    } catch (error) {
-        console.error('❌ Error en fetch a Roblox:', error);
-        res.status(500).json({ status: 'error', message: 'Error en la comunicación con Roblox' });
-    }
-});
-
