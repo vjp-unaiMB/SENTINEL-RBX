@@ -6,9 +6,7 @@ body *{
     font-style: normal;
 }
 
-main{
-    height: 80vh;
-}
+
 
 header i:hover{
     color: #46ff3c;
@@ -230,15 +228,15 @@ button:not(:hover) {
 .ZonaJugadores, .ZonaMensajes{
     width: 40%;
     height: 400px;
+}
+.Fila2{
     margin-bottom: 40px;
 }
-
 
 .registro{
     background-color:#18181A ;
     color: #007222;
     height: 400px;
-    width: 200px;
     border-radius: 30px;
 }
 .registro input{
@@ -279,4 +277,38 @@ button:not(:hover) {
 
 #mensajeEmergente {
     overflow-x: hidden;  /* Oculta el scroll horizontal */
+}
+
+
+/* Responsive: */
+
+@media (max-width: 768px) {
+    .botonera, .server-status, .ZonaJugadores, .ZonaMensajes{
+        border-radius: 0px;
+    }
+    .boton button{
+        width: 120px;
+        height: 120px;
+        margin:0px;
+        padding: 0px;
+    }
+    .botonera{
+        height: 550px;
+    }
+    .boton p{
+        
+        margin:0px;
+        padding: 0px;
+        width: 200px;
+    }
+    .boton{
+        margin-top: 0px;
+        margin-left: 0px;
+    }
+    .cajaBotonera {
+        max-width: 200px;
+    }
+    .ZonaJugadores, .ZonaMensajes{
+        width: 100%;
+    }
 }

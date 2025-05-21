@@ -31,8 +31,8 @@ function actualizarDatosServidor(jugadores) {
                     <img src="https://thumbnails.roblox.com/v1/users/avatar?userIds=${jugador.userId}&size=150x150&format=Png&isCircular=false"  style=" border-radius: 200px;"
                     alt="Avatar de ${jugador.name}"
                     onerror="this.src='Recursos/Michael.png'; this.style.opacity='0.5'">
-                    <button class="btn btn-danger text-black action-btn" data-action="apagar-servidor">Expulsar <i class="fa-solid fa-door-open"></i></button>
-                    <button id="enviarMensaje2" class="btn btn-warning action-btn" >Mensaje <i class="fa-solid fa-message"></i></button>
+                    <button type="button" class="btn btn-danger text-black action-btn" data-action="apagar-servidor">Expulsar <i class="fa-solid fa-door-open"></i></button>
+                    <button type="button" class="btn btn-warning action-btn" data-action="anunciar-servidor">Mensaje <i class="fa-solid fa-message"></i></button>
                 </div>
             </div>
         `;
@@ -132,7 +132,6 @@ function setupButtonActions() {
     const modal = document.getElementById('formularioEmergente');
     const cerrarModal = document.getElementById('cerrarFormulario');
     const confirmarAnuncio = document.getElementById('enviarMensaje');
-    const confirmarAnuncio2 = document.getElementById('enviarMensaje2');
     const inputAnuncio = document.getElementById('mensajeGlobal');
     let botonActual = null;
 
@@ -142,40 +141,6 @@ function setupButtonActions() {
     });
 
     confirmarAnuncio.addEventListener('click', async () => {
-        const mensaje = inputAnuncio.value.trim();
-        if (!mensaje) {
-            alert('Por favor, escribe un mensaje.');
-            return;
-        }
-
-        const payload = {
-            tipo: 'mensaje-global',
-            contenido: mensaje
-        };
-
-        try {
-            botonActual.disabled = true;
-            botonActual.classList.add('loading');
-
-            const response = await fetch('/enviar-senal', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            const result = await response.json();
-            alert(result.message || 'Mensaje enviado');
-        } catch (error) {
-            console.error(error);
-            alert('Error al enviar el mensaje');
-        } finally {
-            botonActual.disabled = false;
-            botonActual.classList.remove('loading');
-            modal.style.display = 'none';
-            inputAnuncio.value = '';
-        }
-    });
-    confirmarAnuncio2.addEventListener('click', async () => {
         const mensaje = inputAnuncio.value.trim();
         if (!mensaje) {
             alert('Por favor, escribe un mensaje.');
