@@ -19,48 +19,43 @@ function actualizarDatosServidor(jugadores) {
     actividadServer.innerHTML = '';
 
     jugadores.forEach(jugador => {
-        const jugadorElement = document.createElement('div');
-        jugadorElement.className = 'jugador';
-        jugadorElement.innerHTML = `
-
-
-            <div class="card" style="width: 90%; background-color:rgb(45, 48, 52); border-radius: 5px; margin: 10px; ">
-                <div class="card-body">
-                    <h5 class="card-title text-white"> ${jugador.name}</h5>
-                    <h6 class="card-subtitle mb-2 text-white">ID de jugador 🡺 ${jugador.userId}</h6>
-                    <img src="https://thumbnails.roblox.com/v1/users/avatar?userIds=${jugador.userId}&size=150x150&format=Png&isCircular=false"  style=" border-radius: 200px;"
-                    alt="Avatar de ${jugador.name}"
-                    onerror="this.src='Recursos/Michael.png'; this.style.opacity='0.5'">
-                    <button type="button" class="btn btn-danger text-black">Expulsar <i class="fa-solid fa-door-open"></i></button>
-                    <button type="button" class="btn btn-warning btn-mensaje" data-userid="${jugador.userId}" data-username="${jugador.name}"> Mensaje <i class="fa-solid fa-message"></i> </button>
-                </div>
+    const jugadorElement = document.createElement('div');
+    jugadorElement.className = 'jugador';
+    jugadorElement.innerHTML = `
+        <div class="card" style="width: 90%; background-color:rgb(45, 48, 52); border-radius: 5px; margin: 10px;">
+            <div class="card-body">
+                <h5 class="card-title text-white">${jugador.name}</h5>
+                <h6 class="card-subtitle mb-2 text-white">ID de jugador 🡺 ${jugador.userId}</h6>
+                <img src="https://thumbnails.roblox.com/v1/users/avatar?userIds=${jugador.userId}&size=150x150&format=Png&isCircular=false"
+                     style="border-radius: 200px;"
+                     alt="Avatar de ${jugador.name}"
+                     onerror="this.src='Recursos/Michael.png'; this.style.opacity='0.5'">
+                <button type="button" class="btn btn-danger text-black">Expulsar <i class="fa-solid fa-door-open"></i></button>
+                <button type="button" class="btn btn-warning btn-mensaje"
+                        data-userid="${jugador.userId}" data-username="${jugador.name}">
+                    Mensaje <i class="fa-solid fa-message"></i>
+                </button>
             </div>
-            
+        </div>
+    `;
 
-            
-        `;
+    contenedor.appendChild(jugadorElement);
+    jugadoresAux++;
+    console.log("Jugador " + jugadoresAux, jugador);
+});
 
-        contenedor.appendChild(jugadorElement);
 
-        contenedor.querySelectorAll('.btn-mensaje').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const userId = btn.dataset.userid;
-                const username = btn.dataset.username;
+contenedor.querySelectorAll('.btn-mensaje').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const userId = btn.dataset.userid;
+        const username = btn.dataset.username;
 
-                jugadorActivo = { userId, name: username };
+        jugadorActivo = { userId, name: username };
 
-                // Actualizar título del modal
-                document.querySelector('#formularioEmergente h2').innerText = `Enviar Mensaje a ${username}`;
-                
-                // Mostrar modal
-                document.getElementById('formularioEmergente').style.display = 'block';
-            });
-        });
-
-        jugadoresAux++;
-
-        console.log("Jugador " + jugadoresAux, jugador);
+        document.querySelector('#formularioEmergente h2').innerText = `Enviar Mensaje a ${username}`;
+        document.getElementById('formularioEmergente').style.display = 'block';
     });
+});
 
     if (jugadoresAux === 0) {
         actividadServer.innerHTML = `<span class="actividad text-white">Inactivo </span><img src="Recursos/Led apagado.png" alt="">`;
@@ -272,47 +267,6 @@ function conectarMensajesRemotos() {
     };
 }
 
-document.getElementById('enviarMensajeA').addEventListener('click', async () => {
-    const mensaje = document.getElementById('mensajeGlobal').value.trim();
-
-    if (!mensaje || !jugadorActivo) {
-        alert('Debes seleccionar un jugador y escribir un mensaje.');
-        return;
-    }
-
-    const hora = new Date().toLocaleTimeString();
-
-    const payload = {
-        jugador: jugadorActivo.name,
-        userId: jugadorActivo.userId,
-        mensaje,
-        hora
-    };
-
-    try {
-        const res = await fetch('/mensajeA', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                userId: jugadorActivo.userId,
-                mensaje: mensaje
-            })
-        });
-
-        const data = await res.json();
-
-        if (data.status === "ok") {
-            alert(`Mensaje enviado a ${jugadorActivo.name}`);
-            document.getElementById('mensajeGlobal').value = '';
-            document.getElementById('formularioEmergente').style.display = 'none';
-        } else {
-            alert('Hubo un problema al enviar el mensaje');
-        }
-    } catch (err) {
-        console.error('Error al enviar mensaje remoto:', err);
-        alert('Error de red o del servidor.');
-    }
-});
 
 
 // Inicialización principal
