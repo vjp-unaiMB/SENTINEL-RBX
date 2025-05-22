@@ -313,4 +313,7 @@ button:not(:hover) {
     .ZonaJugadores, .ZonaMensajes{
         width: 100%;
     }
+    .card {
+        font-size: small;
+    }
 }
