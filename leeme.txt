@@ -1,0 +1,6 @@
+Url de la Dev Place (Juego de Roblox):https://www.roblox.com/es/games/90732873709602/Sentinel-RBX-dev-place
+
+Comando para desplegar la aplicación local mediante un terminal bash: node server.js 
+
+Importante: Si se ejecuta de forma local, Roblox no permitirá la conexión con la WEB y tampoco podrá conectar con la BD por lo que solo se tendrá acceso a la vista Login. 
+Es mejor hacer la prueba desde la versión productiva (desde el enlace)

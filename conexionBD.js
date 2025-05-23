@@ -1,13 +1,13 @@
-// Base de datos PostgreSQL configuración
+// configuración base de datos PostgreSQL 
 
 require('dotenv').config(); 
 
 const { Pool } = require('pg');
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, // <-- AQUÍ usu la variable del .env
+  connectionString: process.env.DATABASE_URL, 
   ssl: {
-    rejectUnauthorized: false // Render usa SSL sin certificado autofirmado
+    rejectUnauthorized: false 
   }
 });
 

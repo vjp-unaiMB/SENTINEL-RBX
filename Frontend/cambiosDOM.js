@@ -83,15 +83,6 @@ function actualizarCronometro() {
 }
 
 
-
-
-
-
-
-
-
-
-
 // Cargar jugadores desde el servidor
 async function cargarJugadores() {
     try {
@@ -239,7 +230,7 @@ function conectarMensajesRemotos() {
     const mensajeContenedor = document.getElementById('mensajeEmergente');
 
     if (!mensajeContenedor) {
-        console.warn("❗ Contenedor de mensajeEmergente no encontrado");
+        console.warn("Contenedor de mensajeEmergente no encontrado");
         return;
     }
 
@@ -249,7 +240,7 @@ function conectarMensajesRemotos() {
     });
 
     eventSource.onerror = (error) => {
-        console.error('❌ Error en mensaje SSE:', error);
+        console.error('Error en mensaje SSE:', error);
         setTimeout(conectarMensajesRemotos, 5000); // Reintentar
     };
 }

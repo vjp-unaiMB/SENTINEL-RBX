@@ -6,13 +6,13 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 const cors = require('cors');
-const pool = require('./conexionBD.js'); // Conexión con la BD
+const pool = require('./conexionBD.js'); //Conexión con la BD
 
 const bcrypt = require('bcrypt'); //Cifrado de contraseñas
 
 
 
-// Variables públicas
+//Variables públicas
 
 let servidor_status = false;
 let clients = [];
@@ -23,7 +23,7 @@ const TOKEN_CONEXION = "tOkEn/ComRbX";
 
 
 
-// Middleware general
+//Middleware general
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'Frontend')));
 
 
 
-// Iniciar servidor
+//Iniciar servidor
 app.listen(PORT, async () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 
@@ -51,8 +51,7 @@ app.listen(PORT, async () => {
 });
 
 
-// Rutas generales
-
+//Rutas generales
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'Frontend', 'index.html'));
 });
@@ -74,10 +73,8 @@ app.get('/terminos', (req, res) => {
 
 
 
-// SSE (Server-Sent Events) Para hacer polling desde el servidor (detectar eventos sin necesidad de escuchar) 
-// contiene bloques de escucha en tiempo real:
-
-
+//SSE (Server-Sent Events) Para hacer polling desde el servidor (detectar eventos sin necesidad de escuchar) 
+//contiene bloques de escucha en tiempo real:
 app.get('/stream', (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
@@ -96,7 +93,7 @@ app.get('/stream', (req, res) => {
 
 
 
-// Ruta para guardar lista de jugadores enviada por Roblox
+//Ruta para guardar lista de jugadores enviada por Roblox
 app.post('/jugadores', (req, res) => {
     try {
         const lista = req.body.jugadores;
@@ -121,11 +118,11 @@ app.post('/jugadores', (req, res) => {
 
 
 
-// Ruta para devolver los jugadores
+//Ruta para devolver los jugadores
 app.get('/jugadores', (req, res) => {
-    const archivoJugadores = path.join(__dirname, 'jugadores.json');
-    const data = fs.readFileSync(archivoJugadores, 'utf-8');
-    res.json(JSON.parse(data));
+  const archivoJugadores = path.join(__dirname, 'jugadores.json');
+  const data = fs.readFileSync(archivoJugadores, 'utf-8');
+  res.json(JSON.parse(data));
 });
 
 
@@ -133,10 +130,7 @@ app.get('/jugadores', (req, res) => {
 
 
 
-// Rutas para recibir la info del DOM y enviar señales a Roblox
-
-
-// Ruta POST para establecer una señal (botonera)
+//Ruta POST para establecer una señal (botonera)
 app.post('/enviar-senal', (req, res) => {
     const { tipo, contenido } = req.body;
 
@@ -153,7 +147,11 @@ app.post('/enviar-senal', (req, res) => {
     res.json({ success: true, message: `Acción "${tipo}" guardada`, resultado: ultimaSenal });
 });
 
-// Nueva ruta GET para que Roblox lea la última señal
+
+
+
+
+//Nueva ruta GET para que Roblox lea la última señal
 app.get('/enviar-senal', (req, res) => {
     if (!ultimaSenal) {
         return res.json({ resultado: { status: "Ninguna señal disponible" } });
@@ -166,7 +164,12 @@ app.get('/enviar-senal', (req, res) => {
     res.json({ resultado: { status: mapearTipo(respuesta.tipo), mensaje: respuesta.contenido } });
 });
 
-// Función para mapear tipo a texto descriptivo (Es lo que le permitirá a las condicionales de roblox comparar el tipo de señal)
+
+
+
+
+
+//Función para mapear tipo a texto descriptivo (Es lo que le permitirá a las condicionales de roblox comparar el tipo de señal)
 function mapearTipo(tipo) {
     switch (tipo) {
         case 'mensaje-global': return 'MensajeGlobal';
@@ -177,7 +180,10 @@ function mapearTipo(tipo) {
 }
 
 
-// Ruta de autenticación OAuth de Roblox
+
+
+
+//Ruta de autenticación OAuth de Roblox
 app.get('/oauth/callback', async (req, res) => {
     const authCode = req.query.code;
     if (!authCode) return res.status(400).send("No se proporcionó ningún código");
@@ -208,7 +214,7 @@ app.get('/oauth/callback', async (req, res) => {
 
 
 
-// Guardar mensaje desde formulario web
+//Guardar mensaje desde formulario web
 app.post('/guardarMensaje', (req, res) => {
     const mensaje = req.body.mensaje;
     if (!mensaje) return res.status(400).send('No se recibió mensaje.');
@@ -227,7 +233,7 @@ app.post('/guardarMensaje', (req, res) => {
 
 
 
-// Ofrecer mensaje a Roblox (lectura por GET)
+//Ofrecer mensaje a Roblox (lectura por GET)
 app.get('/OfrecerMensaje', (req, res) => {
     const mensajePath = 'mensaje.txt';
 
@@ -245,7 +251,7 @@ app.get('/OfrecerMensaje', (req, res) => {
 
 
 
-// Recibir señal directa desde Roblox y reenviarla por SSE
+//Recibir señal directa desde Roblox y reenviarla por SSE
 app.post('/senal', express.json(), (req, res) => {
     const contenido = req.body;
     clients.forEach(client => {
@@ -256,7 +262,10 @@ app.post('/senal', express.json(), (req, res) => {
 
 
 
-// Recibir Mensaje Remoto
+
+
+
+//Recibir Mensaje Remoto
 app.post('/MensajeRemoto', (req, res) => {
 	const { jugador, userId, mensaje, hora } = req.body;
   	const archivoMensaje = path.join(__dirname, 'mensaje.txt');
@@ -272,7 +281,7 @@ app.post('/MensajeRemoto', (req, res) => {
 	res.status(200).json({ status: "ok" });
 });
 
-// SSE: Mensajes recibidos desde Roblox
+//SSE: Mensajes recibidos desde Roblox
 app.get('/mensajes-stream', (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
@@ -296,7 +305,7 @@ app.get('/mensajes-stream', (req, res) => {
 
 
 
-// CONFIGURACIÓN DE LA BASE DE DATOS
+//CONFIGURACIÓN DE LA BASE DE DATOS
 
 
 
@@ -305,7 +314,7 @@ app.get('/mensajes-stream', (req, res) => {
 
 app.use(express.json());
 
-// GET: Ver todos los usuarios
+//GET: Ver todos los usuarios
 app.get('/verUsuarios', async (req, res) => {
   try {
     const resultado = await pool.query('SELECT * FROM usuarios');
@@ -316,7 +325,7 @@ app.get('/verUsuarios', async (req, res) => {
   }
 });
 
-// POST: Añadir un nuevo usuario
+//POST: Añadir un nuevo usuario
 app.post('/usuarios', async (req, res) => {
   const { nombre, password } = req.body;
 
@@ -350,7 +359,7 @@ app.post('/usuarios', async (req, res) => {
 // }
 
 
-// Función extendida para crear tabla + usuario por defecto
+//Función extendida para crear tabla + usuario por defecto
 async function crearTablaUsuarios() {
   try {
     await pool.query(`
@@ -376,7 +385,7 @@ async function crearTablaUsuarios() {
   }
 }
 
-// Ruta POST para login desde formulario sin JS externo
+//Ruta POST para login desde formulario sin JS externo
 app.post('/login', async (req, res) => {
   const { nombre, password } = req.body;
 
@@ -406,7 +415,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// Ruta para devolver la lista de usuarios administradores desde la BD a roblox
+//Ruta para devolver la lista de usuarios administradores desde la BD a roblox
 app.get('/admins', async (req, res) => {
   try {
       const resultado = await pool.query('SELECT nombre FROM usuarios');
